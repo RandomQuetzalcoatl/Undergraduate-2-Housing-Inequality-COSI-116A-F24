@@ -1,15 +1,24 @@
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-  }
-  
-  #map {
-    margin: auto;
-  }
-  
-  .borough {
-    fill: lightgray;
-    stroke: #333;
-    stroke-width: 1px;
-  }
-  
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: whitesmoke;
+}
+
+#map-container {
+  margin: auto;
+  max-width: 60%;
+  border: 5px solid black;
+  padding: 10px;
+  background-color: lightgray;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+.borough {
+  fill: white;
+  stroke: #333;
+  stroke-width: 1px;
+}
