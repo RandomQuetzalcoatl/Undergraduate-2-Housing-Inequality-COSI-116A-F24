@@ -1,0 +1,15 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  #map {
+    margin: auto;
+  }
+  
+  .borough {
+    fill: lightgray;
+    stroke: #333;
+    stroke-width: 1px;
+  }
+  
