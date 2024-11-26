@@ -4,8 +4,13 @@ body {
   background-color: whitesmoke;
 }
 
+#container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 #map-container {
-  margin: auto;
   max-width: 60%;
   border: 5px solid black;
   padding: 10px;
@@ -21,4 +26,27 @@ body {
   fill: white;
   stroke: #333;
   stroke-width: 1px;
+}
+
+.borough.selected {
+  stroke: black;
+  stroke-width: 3px;
+}
+
+#legend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 20px;
+}
+
+#legend-color-bar {
+  width: 20px;
+  height: 200px;
+  background: linear-gradient(to top,"#ffcccc", "#ff0000");
+  margin: 5px 0;
+}
+
+#legend-min, #legend-max {
+  font-size: 12px;
 }

@@ -8,9 +8,26 @@
 </head>
 <body>
   <h1>New York City</h1>
-  <div id="map-container">
-    <div id="map"></div>
+  <div id="container">
+    <div id="legend">
+      <span id="legend-max">Max</span>
+      <div id="legend-color-bar"></div>
+      <span id="legend-min">0</span>
+    </div>
+    <div id="map-container">
+      <div id="map"></div>
+    </div>
   </div>
+
+  <label for="color-attribute">Color by:</label>
+  <select id="color-attribute">
+    <option value="shape_area">Rent Price</option>
+    <option value="shape_leng">Occupancy Rate</option>
+    <option value="boro_code">Borough Code</option>
+  </select>
+  <label for="year-slider">Select Year:</label>
+  <input type="range" id="year-slider" min="0" max="10" step="1" value="0">
+  <span id="year-display">1991</span>
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <script src="renderMap.js"></script>
 </body>
