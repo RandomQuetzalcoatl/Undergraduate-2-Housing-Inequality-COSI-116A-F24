@@ -1,0 +1,1205 @@
+*2011 NYCHVS Stata IMPORT PRORGRAM
+
+cd "LOCATION OF TEXT FILES"
+
+* OCCUPIED DATA FILE
+clear
+infix	recid	1	///
+	boro	2	///
+	uf1_1	3	///
+	uf1_2	4	///
+	uf1_3	5	///
+	uf1_4	6	///
+	uf1_5	7	///
+	uf1_6	8	///
+	uf1_7	9	///
+	uf1_8	10	///
+	uf1_9	11	///
+	uf1_10	12	///
+	uf1_11	13	///
+	uf1_12	14	///
+	uf1_13	15	///
+	uf1_14	16	///
+	uf1_15	17	///
+	uf1_16	18	///
+	uf1_35	19	///
+	uf1_17	20	///
+	uf1_18	21	///
+	uf1_19	22	///
+	uf1_20	23	///
+	uf1_21	24	///
+	uf1_22	25	///
+	sc23	26	///
+	sc24	27	///
+	sc36	28	///
+	sc37	29	///
+	sc38	30	///
+	hhr2	31	///
+	hhr3t	32-33	///
+	hhr5	34	///
+	race1	35-56	///
+	uf2a	57-58	///
+	uf2b	59-60	///
+	sc51	61-62	///
+	sc68	63-64	///
+	sc52	65-68	///
+	sc53	69	///
+	sc54	70	///
+	sc110	71-72	///
+	sc111	73-74	///
+	sc112	75-76	///
+	sc113	77-78	///
+	sc114	79	///
+	sc115	80	///
+	sc116	81	///
+	sc117	82	///
+	sc118	83	///
+	sc120	88	///
+	sc121	89	///
+	uf5	98-104	///
+	sc125	105	///
+	uf6	106-112	///
+	sc127	113	///
+	uf7	114-118	///
+	sc134	120-123	///
+	uf7a	124-127	///
+	uf9	128-129	///
+	sc140	130	///
+	sc141	131	///
+	uf8	132-135	///
+	sc143	136	///
+	sc144	137	///
+	uf10	138-139	///
+	uf48	140-141	///
+	sc147	142	///
+	uf11	143-144	///
+	uf50	145-146	///
+	sc149	147	///
+	sc173	148	///
+	sc171	149	///
+	sc150	150	///
+	sc151	151-152	///
+	sc152	153	///
+	sc153	154	///
+	sc154	155	///
+	sc155	156	///
+	sc156	157	///
+	sc157	158	///
+	sc158	159	///
+	sc159	160	///
+	uf12	161-164	///
+	sc161	165	///
+	uf13	166-169	///
+	uf14	170-173	///
+	sc164	174	///
+	uf15	175-178	///
+	sc166	179	///
+	uf16	180-184	///
+	sc174	185	///
+	uf64	186-189	///
+	uf17	191-195	///
+	sc181	196	///
+	sc541	206	///
+	sc184	207	///
+	sc199	208	///
+	sc542	209	///
+	sc176	210	///
+	sc198	211	///
+	sc177	212	///
+	sc197	213	///
+	sc178	214	///
+	sc543	215	///
+	sc544	216	///
+	uf17a	223-227	///
+	sc185	228	///
+	sc186	229	///
+	sc187	236	///
+	sc188	237	///
+	sc571	238	///
+	sc189	239	///
+	sc190	240	///
+	sc191	241	///
+	sc192	242	///
+	sc193	243	///
+	sc194	244	///
+	sc196	245	///
+	sc548	246	///
+	sc549	247	///
+	sc550	248	///
+	sc551	249	///
+	sc575	256	///
+	sc570	257-258	///
+	sc574	259	///
+	sc647	260	///
+	sc648	261	///
+	sc649	262	///
+	sc650	263	///
+	sc651	264	///
+	sc537	265	///
+	sc538	270	///
+	sc560	271	///
+	sc561	272-275	///
+	sc562	276-279	///
+	uf19	407	///
+	psi_11	408-409	///
+	new_csr	412-413	///
+	rec15	414-415	///
+	sc26	416-417	///
+	uf23	419-420	///
+	rec21	421	///
+	sc27	422-423	///
+	rec1	424-425	///
+	uf46	426	///
+	rec4	427	///
+	rec_race_a	428	///
+	rec_race_c	434-435	///
+	rec62	436	///
+	rec64	437	///
+	rec54	438	///
+	rec53	439	///
+	tot_per	440-441	///
+	rec28	442-444	///
+	uf26	445-449	///
+	uf28	450-453	///
+	uf27	454-457	///
+	rec39	458	///
+	uf42	459-465	///
+	uf42a	466	///
+	uf34	467-473	///
+	uf34a	474	///
+	uf35	475-481	///
+	uf35a	482	///
+	uf36	483-489	///
+	uf36a	490	///
+	uf37	491-497	///
+	uf37a	498	///
+	uf38	499-505	///
+	uf38a	506	///
+	uf39	507-513	///
+	uf39a	514	///
+	uf40	515-521	///
+	uf40a	522	///
+	cd	526-527	///
+	uf30	528-531	///
+	uf29	532-535	///
+	rec8	536	///
+	rec7	537	///
+	fw	538-546	///
+	chufw	547-555	///
+	seqno	556-561	///
+	flg_sx1	571	///
+	flg_ag1	572	///
+	flg_hs1	573	///
+	flg_rc1	574	///
+	hflag2	575	///
+	hflag1	576	///
+	hflag13	577	///
+	hflag6	578	///
+	hflag3	579	///
+	hflag14	580	///
+	hflag16	581	///
+	hflag7	582	///
+	hflag9	583	///
+	hflag10	584	///
+	hflag91	585	///
+	hflag11	586	///
+	hflag12	587	///
+	hflag4	588	///
+	hflag18	589	///
+	uf52h_h	591	///
+	uf52h_a	592	///
+	uf52h_b	593	///
+	uf52h_c	594	///
+	uf52h_d	595	///
+	uf52h_e	596	///
+	uf52h_f	597	///
+	uf52h_g	598	///
+	fw1	601-609	///
+	fw2	610-618	///
+	fw3	619-627	///
+	fw4	628-636	///
+	fw5	637-645	///
+	fw6	646-654	///
+	fw7	655-663	///
+	fw8	664-672	///
+	fw9	673-681	///
+	fw10	682-690	///
+	fw11	691-699	///
+	fw12	700-708	///
+	fw13	709-717	///
+	fw14	718-726	///
+	fw15	727-735	///
+	fw16	736-744	///
+	fw17	745-753	///
+	fw18	754-762	///
+	fw19	763-771	///
+	fw20	772-780	///
+	fw21	781-789	///
+	fw22	790-798	///
+	fw23	799-807	///
+	fw24	808-816	///
+	fw25	817-825	///
+	fw26	826-834	///
+	fw27	835-843	///
+	fw28	844-852	///
+	fw29	853-861	///
+	fw30	862-870	///
+	fw31	871-879	///
+	fw32	880-888	///
+	fw33	889-897	///
+	fw34	898-906	///
+	fw35	907-915	///
+	fw36	916-924	///
+	fw37	925-933	///
+	fw38	934-942	///
+	fw39	943-951	///
+	fw40	952-960	///
+	fw41	961-969	///
+	fw42	970-978	///
+	fw43	979-987	///
+	fw44	988-996	///
+	fw45	997-1005	///
+	fw46	1006-1014	///
+	fw47	1015-1023	///
+	fw48	1024-1032	///
+	fw49	1033-1041	///
+	fw50	1042-1050	///
+	fw51	1051-1059	///
+	fw52	1060-1068	///
+	fw53	1069-1077	///
+	fw54	1078-1086	///
+	fw55	1087-1095	///
+	fw56	1096-1104	///
+	fw57	1105-1113	///
+	fw58	1114-1122	///
+	fw59	1123-1131	///
+	fw60	1132-1140	///
+	fw61	1141-1149	///
+	fw62	1150-1158	///
+	fw63	1159-1167	///
+	fw64	1168-1176	///
+	fw65	1177-1185	///
+	fw66	1186-1194	///
+	fw67	1195-1203	///
+	fw68	1204-1212	///
+	fw69	1213-1221	///
+	fw70	1222-1230	///
+	fw71	1231-1239	///
+	fw72	1240-1248	///
+	fw73	1249-1257	///
+	fw74	1258-1266	///
+	fw75	1267-1275	///
+	fw76	1276-1284	///
+	fw77	1285-1293	///
+	fw78	1294-1302	///
+	fw79	1303-1311	///
+	fw80	1312-1320	///
+using "uf_11_repwgt_occ_web.txt"
+	
+label variable recid "Record Type"
+label variable boro "Borough"
+label variable uf1_1 "External Walls--Missing brick"
+label variable uf1_2 "External Walls--Sloping walls"
+label variable uf1_3 "External Walls--Major cracks in walls"
+label variable uf1_4 "External Walls--Loose or hanging cornice"
+label variable uf1_5 "External Walls--No problems"
+label variable uf1_6 "External Walls--Unable to observe"
+label variable uf1_7 "Condition of Windows--Broken/missing"
+label variable uf1_8 "Condition of Windows--Rotten/loose"
+label variable uf1_9 "Condition of Windows--Boarded-up"
+label variable uf1_10 "Condition of Windows--No problems"
+label variable uf1_11 "Condition of Windows--Unable to observe"
+label variable uf1_12 "Condition of Stairways--Loose/broken railings"
+label variable uf1_13 "Condition of Stairways--Loose/broken steps"
+label variable uf1_14 "Condition of Stairways--No problems"
+label variable uf1_15 "Condition of Stairways--No interior steps"
+label variable uf1_16 "Condition of Stairways--No exterior steps"
+label variable uf1_35 "Condition of Stairways--Unable to observe"
+label variable uf1_17 "Condition of Floors--Sagging/sloping"
+label variable uf1_18 "Condition of Floors--Slanted doors"
+label variable uf1_19 "Condition of Floors--Deep wear"
+label variable uf1_20 "Condition of Floors--Holes/missing flooring"
+label variable uf1_21 "Condition of Floors--None of these problems"
+label variable uf1_22 "Condition of Floors--Unable to observe"
+label variable sc23 "Condition of building"
+label variable sc24 "Broken/Boarded Windows--observation"
+label variable sc36 "Wheelchair accessibility--Street entry"
+label variable sc37 "Wheelchair accessibility--Elevator"
+label variable sc38 "Wheelchair accessibility--Unit entrance"
+label variable hhr2 "Sex of householder"
+label variable hhr3t "Age of householder"
+label variable hhr5 "Hispanic origin"
+label variable race1 "Race of householder"
+label variable uf2a "Temporary Residence-Affordability"
+label variable uf2b "Temporary Residence-Other"
+label variable sc51 "Most recent place lived"
+label variable sc68 "Most recent SBA lived"
+label variable sc52 "Year Householder Moved into Unit Recode"
+label variable sc53 "On or after July 1, 1971"
+label variable sc54 "First occupants of unit"
+label variable sc110 "Reason for moving"
+label variable sc111 "Place of birth-householder"
+label variable sc112 "Place of birth-father"
+label variable sc113 "Place of birth-mother"
+label variable sc114 "Coop/condo status"
+label variable sc115 "Tenure(1)"
+label variable sc116 "Tenure(2)"
+label variable sc117 "Lived in unit at time of coop/condo conversion"
+label variable sc118 "Coop/condo conv. through a non-eviction plan"
+label variable sc120 "Occupancy status before acquisition"
+label variable sc121 "Condo/Coop before acquisition"
+label variable uf5 "Down payment(1)"
+label variable sc125 "Down payment(2)"
+label variable uf6 "Value"
+label variable sc127 "Mortgage status"
+label variable uf7 "Monthly mortgage"
+label variable sc134 "When Did Most Recent Mortgage Originate"
+label variable uf7a "Current Interest Rate"
+label variable uf9 "Condo/Maintenance fees"
+label variable sc140 "Senior Citizen Carrying Charge Increase Exemption"
+label variable sc141 "Fire and liability insurance paid separately"
+label variable uf8 "Fire and liability insurance"
+label variable sc143 "Fire and liability on personal possessions"
+label variable sc144 "Real estate taxes paid separately"
+label variable uf10 "2010 real estate taxes"
+label variable uf48 "Units in building"
+label variable sc147 "Owner in building"
+label variable uf11 "Stories in building"
+label variable uf50 "Floor of Unit"
+label variable sc149 "Elevator in building"
+label variable sc173 "Sidewalk to elevator"
+label variable sc171 "Sidewalk to unit"
+label variable sc150 "Number of rooms"
+label variable sc151 "Number of bedrooms"
+label variable sc152 "Complete plumbing facilities"
+label variable sc153 "Exclusive use of plumbing facilities"
+label variable sc154 "Toilet breakdown"
+label variable sc155 "Complete kitchen facilities"
+label variable sc156 "Exclusive use of kitchen facilities"
+label variable sc157 "Kitchen facilities functioning"
+label variable sc158 "Type of heating fuel"
+label variable sc159 "Electricity-paid separately"
+label variable uf12 "Monthly electricity cost"
+label variable sc161 "Gas-paid separately"
+label variable uf13 "Monthly gas cost"
+label variable uf14 "Combined gas/electricity"
+label variable sc164 "Water and sewer-paid separately"
+label variable uf15 "Yearly water and sewer cost"
+label variable sc166 "Other fuels-paid separately"
+label variable uf16 "Yearly cost for other fuels"
+label variable sc174 "Home Energy Assistance"
+label variable uf64 "Yearly assistance amount"
+label variable uf17 "Contract rent"
+label variable sc181 "Length of lease"
+label variable sc541 "Federal section 8"
+label variable sc184 "Senior citizen rent increase"
+label variable sc199 "Advantage (Work, Child, or Fixed)"
+label variable sc542 "Public assistance shelter allowance"
+label variable sc176 "Housing Stability Plus (HSP)"
+label variable sc198 "Employment Incentive Housing Program"
+label variable sc177 "Long Term Stayers Program (LTSP)"
+label variable sc197 "Jiggetts"
+label variable sc178 "Family Eviction Prevention Supplement"
+label variable sc543 "Another federal housing subsidy program"
+label variable sc544 "Another state/city housing program"
+label variable uf17a "Out of pocket rent"
+label variable sc185 "Heating equipment breakdown"
+label variable sc186 "Number of heating breakdowns"
+label variable sc187 "Additional sources of heat"
+label variable sc188 "Presence of mice and rates"
+label variable sc571 "Number of Cockroaches"
+label variable sc189 "Exterminator service"
+label variable sc190 "Cracks/holes in interior walls"
+label variable sc191 "Holes in floors"
+label variable sc192 "Broken plaster/peeling paint"
+label variable sc193 "Plaster/paint> 8.5 x 11"
+label variable sc194 "Water leakage"
+label variable sc196 "Respondent rating of structures in neighborhood"
+label variable sc548 "TANF or Family Assistance"
+label variable sc549 "Safety Net"
+label variable sc550 "SSI"
+label variable sc551 "Other"
+label variable sc575 "Land-line Telephone in House"
+label variable sc570 "Adults with Cell Phone"
+label variable sc574 "General Health (respondent)"
+label variable sc647 "Dental (postponed)"
+label variable sc648 "Preventive care/check-up (postponed)"
+label variable sc649 "Mental Health (postponed)"
+label variable sc650 "Treatment or diagnosis of illness (posponed)"
+label variable sc651 "Prescription drugs (posponed)"
+label variable sc537 "Grab bars near toilet or in shower"
+label variable sc538 "Anyone 65 or older fallen in home"
+label variable sc560 "Moved to the US as immigrant"
+label variable sc561 "Year moved to US as immigrant"
+label variable sc562 "Year moved to NYC"
+label variable uf19 "DHCR status input flag"
+label variable psi_11 "Program Status Input"
+label variable new_csr "New control status recode"
+label variable rec15 "Structure class recode"
+label variable sc26 "Type of schedule code"
+label variable uf23 "Year built recode"
+label variable rec21 "Condition of unit recode"
+label variable sc27 "Respondent line number"
+label variable rec1 "Household composition recode"
+label variable uf46 "Presence of nonrelatives"
+label variable rec4 "Race and Ethnicity of householder"
+label variable rec_race_a "Race Recode 1"
+label variable rec_race_c "Race Recode 2"
+label variable rec62 "Presence of plumbing facilities recode"
+label variable rec64 "Presence of kitchen facilities recode"
+label variable rec54 "Number of 1987 maintenance deficiencies"
+label variable rec53 "Number of 2011 maintenance deficiencies"
+label variable tot_per "Total persons recode"
+label variable rec28 "Persons per room"
+label variable uf26 "Monthly gross rent"
+label variable uf28 "Monthly gross rent per room recode"
+label variable uf27 "Monthly contract rent per room recode"
+label variable rec39 "Household below poverty"
+label variable uf42 "Household income recode"
+label variable uf42a "Household income flag"
+label variable uf34 "Salary"
+label variable uf34a "Salary flag"
+label variable uf35 "Business income"
+label variable uf35a "Business income flag"
+label variable uf36 "Interest income"
+label variable uf36a "Interest income flag"
+label variable uf37 "Retirement income (1)"
+label variable uf37a "Retirement income (1) flag"
+label variable uf38 "Retirement income (2)"
+label variable uf38a "Retirement income (2) flag"
+label variable uf39 "Government income"
+label variable uf39a "Government income flag"
+label variable uf40 "Other income"
+label variable uf40a "Other income flag"
+label variable cd "Sub-borough area"
+label variable uf30 "Gross rent/income ratio"
+label variable uf29 "Contract rent/income ratio"
+label variable rec8 "Household members under 6"
+label variable rec7 "Household members under 18"
+label variable fw "Household weight"
+label variable chufw "Final household weight"
+label variable seqno "Sequence number"
+label variable flg_sx1 "Sex of householder"
+label variable flg_ag1 "Age of householder"
+label variable flg_hs1 "Hispanic Origin"
+label variable flg_rc1 "Race of householder"
+label variable hflag2 "Year moved--renters"
+label variable hflag1 "Year moved--owners/renters"
+label variable hflag13 "Value"
+label variable hflag6 "Stories in building"
+label variable hflag3 "Rooms/Bedrooms"
+label variable hflag14 "Plumbing facilities"
+label variable hflag16 "Kitchen facilities"
+label variable hflag7 "Type of heating fuel"
+label variable hflag9 "Electricity cost"
+label variable hflag10 "Gas cost"
+label variable hflag91 "Combined gas/electricity cost"
+label variable hflag11 "Water and sewer cost"
+label variable hflag12 "Other fuels cost"
+label variable hflag4 "Contract rent"
+label variable hflag18 "Rental assistance"
+label variable uf52h_h "Household income"
+label variable uf52h_a "Salary income"
+label variable uf52h_b "Business income"
+label variable uf52h_c "Interest income"
+label variable uf52h_d "Retirement income(1)"
+label variable uf52h_e "Government income"
+label variable uf52h_f "Retirement income(2)"
+label variable uf52h_g "Other income"
+label variable fw1 "Replicate Weight #1"
+label variable fw2 "Replicate Weight #2"
+label variable fw3 "Replicate Weight #3"
+label variable fw4 "Replicate Weight #4"
+label variable fw5 "Replicate Weight #5"
+label variable fw6 "Replicate Weight #6"
+label variable fw7 "Replicate Weight #7"
+label variable fw8 "Replicate Weight #8"
+label variable fw9 "Replicate Weight #9"
+label variable fw10 "Replicate Weight #10"
+label variable fw11 "Replicate Weight #11"
+label variable fw12 "Replicate Weight #12"
+label variable fw13 "Replicate Weight #13"
+label variable fw14 "Replicate Weight #14"
+label variable fw15 "Replicate Weight #15"
+label variable fw16 "Replicate Weight #16"
+label variable fw17 "Replicate Weight #17"
+label variable fw18 "Replicate Weight #18"
+label variable fw19 "Replicate Weight #19"
+label variable fw20 "Replicate Weight #20"
+label variable fw21 "Replicate Weight #21"
+label variable fw22 "Replicate Weight #22"
+label variable fw23 "Replicate Weight #23"
+label variable fw24 "Replicate Weight #24"
+label variable fw25 "Replicate Weight #25"
+label variable fw26 "Replicate Weight #26"
+label variable fw27 "Replicate Weight #27"
+label variable fw28 "Replicate Weight #28"
+label variable fw29 "Replicate Weight #29"
+label variable fw30 "Replicate Weight #30"
+label variable fw31 "Replicate Weight #31"
+label variable fw32 "Replicate Weight #32"
+label variable fw33 "Replicate Weight #33"
+label variable fw34 "Replicate Weight #34"
+label variable fw35 "Replicate Weight #35"
+label variable fw36 "Replicate Weight #36"
+label variable fw37 "Replicate Weight #37"
+label variable fw38 "Replicate Weight #38"
+label variable fw39 "Replicate Weight #39"
+label variable fw40 "Replicate Weight #40"
+label variable fw41 "Replicate Weight #41"
+label variable fw42 "Replicate Weight #42"
+label variable fw43 "Replicate Weight #43"
+label variable fw44 "Replicate Weight #44"
+label variable fw45 "Replicate Weight #45"
+label variable fw46 "Replicate Weight #46"
+label variable fw47 "Replicate Weight #47"
+label variable fw48 "Replicate Weight #48"
+label variable fw49 "Replicate Weight #49"
+label variable fw50 "Replicate Weight #50"
+label variable fw51 "Replicate Weight #51"
+label variable fw52 "Replicate Weight #52"
+label variable fw53 "Replicate Weight #53"
+label variable fw54 "Replicate Weight #54"
+label variable fw55 "Replicate Weight #55"
+label variable fw56 "Replicate Weight #56"
+label variable fw57 "Replicate Weight #57"
+label variable fw58 "Replicate Weight #58"
+label variable fw59 "Replicate Weight #59"
+label variable fw60 "Replicate Weight #60"
+label variable fw61 "Replicate Weight #61"
+label variable fw62 "Replicate Weight #62"
+label variable fw63 "Replicate Weight #63"
+label variable fw64 "Replicate Weight #64"
+label variable fw65 "Replicate Weight #65"
+label variable fw66 "Replicate Weight #66"
+label variable fw67 "Replicate Weight #67"
+label variable fw68 "Replicate Weight #68"
+label variable fw69 "Replicate Weight #69"
+label variable fw70 "Replicate Weight #70"
+label variable fw71 "Replicate Weight #71"
+label variable fw72 "Replicate Weight #72"
+label variable fw73 "Replicate Weight #73"
+label variable fw74 "Replicate Weight #74"
+label variable fw75 "Replicate Weight #75"
+label variable fw76 "Replicate Weight #76"
+label variable fw77 "Replicate Weight #77"
+label variable fw78 "Replicate Weight #78"
+label variable fw79 "Replicate Weight #79"
+label variable fw80 "Replicate Weight #80"
+
+
+* PERSON DATA FILE
+clear
+infix	recid	1	///
+	boro	2	///
+	person	3-4	///
+	sex	5	///
+	uf43	6-7	///
+	relation	8-9	///
+	hspanic	10	///
+	race	11-32	///
+	spouse	33-34	///
+	parent1	35-36	///
+	parent2	37-38	///
+	uf3	39	///
+	item40a	40	///
+	item40b	41-42	///
+	item41	43	///
+	item42	44	///
+	item43	45-46	///
+	item44	47	///
+	item45c	48	///
+	item46a	49-52	///
+	item46b	53-56	///
+	item47	57	///
+	item48a	58-59	///
+	item48b	60-61	///
+	uf18	63-68	///
+	uf18a	76-82	///
+	uf18b	83-88	///
+	uf18c	89-94	///
+	uf18d	95-100	///
+	uf18e	101-106	///
+	uf18f	107-112	///
+	item50a	113	///
+	eductn	114-115	///
+	uf41	116-122	///
+	uf41a	123	///
+	uf44	124	///
+	uf45	125	///
+	lfs	126	///
+	chk_g	127	///
+	rec83	128	///
+	rec_race_a	129	///
+	rec_race_c	130-131	///
+	pw	132-140	///
+	seqno	141-146	///
+	cd	147-148	///
+	flg_sx	149	///
+	flg_ag	150	///
+	flg_hs	151	///
+	flg_rc	152	///
+	a1a40a	153	///
+	a1a40b	154	///
+	a1a41	155	///
+	a1a42	156	///
+	a1a43	157	///
+	a1b44	158	///
+	a1b45c	159	///
+	a1b46a	160	///
+	a1b46b	161	///
+	a1b47	162	///
+	a1b48a	163	///
+	a1b48b	164	///
+	a2salary	165	///
+	a2businc	166	///
+	aintinc	167	///
+	aret1inc	168	///
+	agovtinc	169	///
+	aret2inc	170	///
+	aothinc	171	///
+	flg_educ	172	///
+	pw1	181-189	///
+	pw2	190-198	///
+	pw3	199-207	///
+	pw4	208-216	///
+	pw5	217-225	///
+	pw6	226-234	///
+	pw7	235-243	///
+	pw8	244-252	///
+	pw9	253-261	///
+	pw10	262-270	///
+	pw11	271-279	///
+	pw12	280-288	///
+	pw13	289-297	///
+	pw14	298-306	///
+	pw15	307-315	///
+	pw16	316-324	///
+	pw17	325-333	///
+	pw18	334-342	///
+	pw19	343-351	///
+	pw20	352-360	///
+	pw21	361-369	///
+	pw22	370-378	///
+	pw23	379-387	///
+	pw24	388-396	///
+	pw25	397-405	///
+	pw26	406-414	///
+	pw27	415-423	///
+	pw28	424-432	///
+	pw29	433-441	///
+	pw30	442-450	///
+	pw31	451-459	///
+	pw32	460-468	///
+	pw33	469-477	///
+	pw34	478-486	///
+	pw35	487-495	///
+	pw36	496-504	///
+	pw37	505-513	///
+	pw38	514-522	///
+	pw39	523-531	///
+	pw40	532-540	///
+	pw41	541-549	///
+	pw42	550-558	///
+	pw43	559-567	///
+	pw44	568-576	///
+	pw45	577-585	///
+	pw46	586-594	///
+	pw47	595-603	///
+	pw48	604-612	///
+	pw49	613-621	///
+	pw50	622-630	///
+	pw51	631-639	///
+	pw52	640-648	///
+	pw53	649-657	///
+	pw54	658-666	///
+	pw55	667-675	///
+	pw56	676-684	///
+	pw57	685-693	///
+	pw58	694-702	///
+	pw59	703-711	///
+	pw60	712-720	///
+	pw61	721-729	///
+	pw62	730-738	///
+	pw63	739-747	///
+	pw64	748-756	///
+	pw65	757-765	///
+	pw66	766-774	///
+	pw67	775-783	///
+	pw68	784-792	///
+	pw69	793-801	///
+	pw70	802-810	///
+	pw71	811-819	///
+	pw72	820-828	///
+	pw73	829-837	///
+	pw74	838-846	///
+	pw75	847-855	///
+	pw76	856-864	///
+	pw77	865-873	///
+	pw78	874-882	///
+	pw79	883-891	///
+	pw80	892-900	///
+using "uf_11_repwgt_pers_web.txt"
+
+label variable recid "Record Type" 
+label variable boro "Borough" 
+label variable person "Person number" 
+label variable sex "Sex" 
+label variable uf43 "Age" 
+label variable relation "Relationship to householder" 
+label variable hspanic "Hispanic Origin" 
+label variable race "Race" 
+label variable spouse "Person number of Spouse" 
+label variable parent1 "Person number of 1st parent" 
+label variable parent2 "Person number of 2nd parent" 
+label variable uf3 "Person from temporary residence" 
+label variable item40a "Worked last week" 
+label variable item40b "Hours worked last week" 
+label variable item41 "Temporarily Absent/Layoff" 
+label variable item42 "Looking for work" 
+label variable item43 "Reason not looking for work" 
+label variable item44 "Last time worked" 
+label variable item45c "Major Industry type" 
+label variable item46a "Industry" 
+label variable item46b "Occupation" 
+label variable item47 "Type of worker" 
+label variable item48a "Weeks worked in 2010" 
+label variable item48b "Hours worked in 2010" 
+label variable uf18 "Salary income" 
+label variable uf18a "Business income" 
+label variable uf18b "Interest income" 
+label variable uf18c "Retirement(1) income" 
+label variable uf18d "Government income" 
+label variable uf18e "Retirement(2) income" 
+label variable uf18f "Other income" 
+label variable item50a "Current Enrollment in Job Training/Education" 
+label variable eductn "Educational Attainment" 
+label variable uf41 "Total person income" 
+label variable uf41a "Person income flag" 
+label variable uf44 "Business income loss flag" 
+label variable uf45 "Interest income loss flag" 
+label variable lfs "Labor force status recode" 
+label variable chk_g "Check item g" 
+label variable rec83 "Race and Ethnicity" 
+label variable rec_race_a "Race Recode 1" 
+label variable rec_race_c "Race Recode 2" 
+label variable pw "Person weight" 
+label variable seqno "Sequence number" 
+label variable cd "Sub-borough Area" 
+label variable flg_sx "Sex allocation flag" 
+label variable flg_ag "Age allocation flag" 
+label variable flg_hs "Hispanic origin flag" 
+label variable flg_rc "Race allocation flag" 
+label variable a1a40a "Worked last week flag" 
+label variable a1a40b "Hours worked last week flag" 
+label variable a1a41 "Temporary absent/layoff flag" 
+label variable a1a42 "Looking for work flag" 
+label variable a1a43 "Reason not looking flag" 
+label variable a1b44 "Last time worked flag" 
+label variable a1b45c "Major industry flag" 
+label variable a1b46a "Industry flag" 
+label variable a1b46b "Occupation flag" 
+label variable a1b47 "Type of worker flag" 
+label variable a1b48a "Weeks worked in 2010 flag" 
+label variable a1b48b "Hours worked in 2010 flag" 
+label variable a2salary "Salary flag" 
+label variable a2businc "Business income flag" 
+label variable aintinc "Interest income flag" 
+label variable aret1inc "Retirement(1) income flag" 
+label variable agovtinc "Government income flag" 
+label variable aret2inc "Retirement(2) income flag" 
+label variable aothinc "Other income flag" 
+label variable flg_educ "Education flag" 
+label variable pw1 "Replicate Weight #1" 
+label variable pw2 "Replicate Weight #2" 
+label variable pw3 "Replicate Weight #3" 
+label variable pw4 "Replicate Weight #4" 
+label variable pw5 "Replicate Weight #5" 
+label variable pw6 "Replicate Weight #6" 
+label variable pw7 "Replicate Weight #7" 
+label variable pw8 "Replicate Weight #8" 
+label variable pw9 "Replicate Weight #9" 
+label variable pw10 "Replicate Weight #10" 
+label variable pw11 "Replicate Weight #11" 
+label variable pw12 "Replicate Weight #12" 
+label variable pw13 "Replicate Weight #13" 
+label variable pw14 "Replicate Weight #14" 
+label variable pw15 "Replicate Weight #15" 
+label variable pw16 "Replicate Weight #16" 
+label variable pw17 "Replicate Weight #17" 
+label variable pw18 "Replicate Weight #18" 
+label variable pw19 "Replicate Weight #19" 
+label variable pw20 "Replicate Weight #20" 
+label variable pw21 "Replicate Weight #21" 
+label variable pw22 "Replicate Weight #22" 
+label variable pw23 "Replicate Weight #23" 
+label variable pw24 "Replicate Weight #24" 
+label variable pw25 "Replicate Weight #25" 
+label variable pw26 "Replicate Weight #26" 
+label variable pw27 "Replicate Weight #27" 
+label variable pw28 "Replicate Weight #28" 
+label variable pw29 "Replicate Weight #29" 
+label variable pw30 "Replicate Weight #30" 
+label variable pw31 "Replicate Weight #31" 
+label variable pw32 "Replicate Weight #32" 
+label variable pw33 "Replicate Weight #33" 
+label variable pw34 "Replicate Weight #34" 
+label variable pw35 "Replicate Weight #35" 
+label variable pw36 "Replicate Weight #36" 
+label variable pw37 "Replicate Weight #37" 
+label variable pw38 "Replicate Weight #38" 
+label variable pw39 "Replicate Weight #39" 
+label variable pw40 "Replicate Weight #40" 
+label variable pw41 "Replicate Weight #41" 
+label variable pw42 "Replicate Weight #42" 
+label variable pw43 "Replicate Weight #43" 
+label variable pw44 "Replicate Weight #44" 
+label variable pw45 "Replicate Weight #45" 
+label variable pw46 "Replicate Weight #46" 
+label variable pw47 "Replicate Weight #47" 
+label variable pw48 "Replicate Weight #48" 
+label variable pw49 "Replicate Weight #49" 
+label variable pw50 "Replicate Weight #50" 
+label variable pw51 "Replicate Weight #51" 
+label variable pw52 "Replicate Weight #52" 
+label variable pw53 "Replicate Weight #53" 
+label variable pw54 "Replicate Weight #54" 
+label variable pw55 "Replicate Weight #55" 
+label variable pw56 "Replicate Weight #56" 
+label variable pw57 "Replicate Weight #57" 
+label variable pw58 "Replicate Weight #58" 
+label variable pw59 "Replicate Weight #59" 
+label variable pw60 "Replicate Weight #60" 
+label variable pw61 "Replicate Weight #61" 
+label variable pw62 "Replicate Weight #62" 
+label variable pw63 "Replicate Weight #63" 
+label variable pw64 "Replicate Weight #64" 
+label variable pw65 "Replicate Weight #65" 
+label variable pw66 "Replicate Weight #66" 
+label variable pw67 "Replicate Weight #67" 
+label variable pw68 "Replicate Weight #68" 
+label variable pw69 "Replicate Weight #69" 
+label variable pw70 "Replicate Weight #70" 
+label variable pw71 "Replicate Weight #71" 
+label variable pw72 "Replicate Weight #72" 
+label variable pw73 "Replicate Weight #73" 
+label variable pw74 "Replicate Weight #74" 
+label variable pw75 "Replicate Weight #75" 
+label variable pw76 "Replicate Weight #76" 
+label variable pw77 "Replicate Weight #77" 
+label variable pw78 "Replicate Weight #78" 
+label variable pw79 "Replicate Weight #79" 
+label variable pw80 "Replicate Weight #80" 
+
+
+* VACANT DATA FILE
+clear
+infix	recid	1	///
+	boro	2	///
+	uf1_1	3	///
+	uf1_2	4	///
+	uf1_3	5	///
+	uf1_4	6	///
+	uf1_5	7	///
+	uf1_6	8	///
+	uf1_7	9	///
+	uf1_8	10	///
+	uf1_9	11	///
+	uf1_10	12	///
+	uf1_11	13	///
+	uf1_12	14	///
+	uf1_13	15	///
+	uf1_14	16	///
+	uf1_15	17	///
+	uf1_16	18	///
+	uf1_35	19	///
+	uf1_17	20	///
+	uf1_18	21	///
+	uf1_19	22	///
+	uf1_20	23	///
+	uf1_21	24	///
+	uf1_22	25	///
+	sc23	26	///
+	sc24	27	///
+	sc36	28	///
+	sc37	29	///
+	sc38	30	///
+	sc30	31	///
+	sc518	32	///
+	uf49	33-34	///
+	sc520	35	///
+	uf33	36-37	///
+	uf51	38-39	///
+	sc522	40	///
+	sc553	41	///
+	sc555	42	///
+	sc523	43	///
+	sc524	44-45	///
+	sc525	46	///
+	sc526	47	///
+	sc527	48	///
+	sc528	49	///
+	sc529	50	///
+	sc530	51	///
+	sc531	52	///
+	sc532	53	///
+	sc533	54	///
+	sc534	55	///
+	sc535	56-57	///
+	uf31	58-62	///
+	uf19	63	///
+	psi_11	64-65	///
+	new_csr	68-69	///
+	nusc	70-71	///
+	sc26	72-73	///
+	uf23	75-76	///
+	rec62	77	///
+	rec64	78	///
+	uf32	79-82	///
+	rec21	84	///
+	cd	85-86	///
+	seqno	87-92	///
+	fw	93-101	///
+	hflag6	102	///
+	hflag3	103	///
+	hflag15	104	///
+	hflag17	105	///
+	hflag8	106	///
+	hflag5	107	///
+	fw1	111-119	///
+	fw2	120-128	///
+	fw3	129-137	///
+	fw4	138-146	///
+	fw5	147-155	///
+	fw6	156-164	///
+	fw7	165-173	///
+	fw8	174-182	///
+	fw9	183-191	///
+	fw10	192-200	///
+	fw11	201-209	///
+	fw12	210-218	///
+	fw13	219-227	///
+	fw14	228-236	///
+	fw15	237-245	///
+	fw16	246-254	///
+	fw17	255-263	///
+	fw18	264-272	///
+	fw19	273-281	///
+	fw20	282-290	///
+	fw21	291-299	///
+	fw22	300-308	///
+	fw23	309-317	///
+	fw24	318-326	///
+	fw25	327-335	///
+	fw26	336-344	///
+	fw27	345-353	///
+	fw28	354-362	///
+	fw29	363-371	///
+	fw30	372-380	///
+	fw31	381-389	///
+	fw32	390-398	///
+	fw33	399-407	///
+	fw34	408-416	///
+	fw35	417-425	///
+	fw36	426-434	///
+	fw37	435-443	///
+	fw38	444-452	///
+	fw39	453-461	///
+	fw40	462-470	///
+	fw41	471-479	///
+	fw42	480-488	///
+	fw43	489-497	///
+	fw44	498-506	///
+	fw45	507-515	///
+	fw46	516-524	///
+	fw47	525-533	///
+	fw48	534-542	///
+	fw49	543-551	///
+	fw50	552-560	///
+	fw51	561-569	///
+	fw52	570-578	///
+	fw53	579-587	///
+	fw54	588-596	///
+	fw55	597-605	///
+	fw56	606-614	///
+	fw57	615-623	///
+	fw58	624-632	///
+	fw59	633-641	///
+	fw60	642-650	///
+	fw61	651-659	///
+	fw62	660-668	///
+	fw63	669-677	///
+	fw64	678-686	///
+	fw65	687-695	///
+	fw66	696-704	///
+	fw67	705-713	///
+	fw68	714-722	///
+	fw69	723-731	///
+	fw70	732-740	///
+	fw71	741-749	///
+	fw72	750-758	///
+	fw73	759-767	///
+	fw74	768-776	///
+	fw75	777-785	///
+	fw76	786-794	///
+	fw77	795-803	///
+	fw78	804-812	///
+	fw79	813-821	///
+	fw80	822-830	///
+using "uf_11_repwgt_vac_web.txt"
+
+label variable recid "Record Type"
+label variable boro "Borough"
+label variable uf1_1 "External Walls--Missing brick"
+label variable uf1_2 "External Walls--Sloping walls"
+label variable uf1_3 "External Walls--Major cracks in walls"
+label variable uf1_4 "External Walls--Loose or hanging cornice"
+label variable uf1_5 "External Walls--No problems"
+label variable uf1_6 "External Walls--Unable to observe"
+label variable uf1_7 "Condition of Windows--Broken/missing"
+label variable uf1_8 "Condition of Windows--Rotten/loose"
+label variable uf1_9 "Condition of Windows--Boarded-up"
+label variable uf1_10 "Condition of Windows--No problems"
+label variable uf1_11 "Condition of Windows--Unable to observe"
+label variable uf1_12 "Condition of Stairways--Loose/broken railings"
+label variable uf1_13 "Condition of Stairways--Loose/broken steps"
+label variable uf1_14 "Condition of Stairways--No problems"
+label variable uf1_15 "Condition of Stairways--No interior steps"
+label variable uf1_16 "Condition of Stairways--No exterior steps"
+label variable uf1_35 "Condition of Stairways--Unable to observe"
+label variable uf1_17 "Condition of Floors--Sagging/sloping"
+label variable uf1_18 "Condition of Floors--Slanted doors"
+label variable uf1_19 "Condition of Floors--Deep wear"
+label variable uf1_20 "Condition of Floors--Holes/missing flooring"
+label variable uf1_21 "Condition of Floors--None of these problems"
+label variable uf1_22 "Condition of Floors--Unable to observe"
+label variable sc23 "Condition of building"
+label variable sc24 "Broken/Boarded Windows--observation"
+label variable sc36 "Wheelchair accessibility--Street entry"
+label variable sc37 "Wheelchair accessibility--Elevator"
+label variable sc38 "Wheelchair accessibility--Unit entrance"
+label variable sc30 "Vacant unit respondent"
+label variable sc518 "First occupancy"
+label variable uf49 "Number of units in building"
+label variable sc520 "Owner in building"
+label variable uf33 "Stories in building"
+label variable uf51 "Floor of unit"
+label variable sc522 "Elevator in building"
+label variable sc553 "Sidewalk to elevator"
+label variable sc555 "Sidewalk to unit"
+label variable sc523 "Number of Rooms"
+label variable sc524 "Number of Bedrooms"
+label variable sc525 "Complete plumbing facilities"
+label variable sc526 "Exclusive plumbing use"
+label variable sc527 "Kitchen facilities"
+label variable sc528 "Exclusive kitchen use"
+label variable sc529 "Type of Heating Fuel"
+label variable sc530 "Condo/Coop Status"
+label variable sc531 "Duration of Vacancy"
+label variable sc532 "Status Prior to Vacancy"
+label variable sc533 "Condo/Coop Status Before Vacancy"
+label variable sc534 "Status of Vacant Unit"
+label variable sc535 "Reason Unit Not Available for Rent/Sale"
+label variable uf31 "Monthly Asking Rent"
+label variable uf19 "DHCR Status Input Flag"
+label variable psi_11 "Program Status Input"
+label variable new_csr "New Control Status Recode"
+label variable nusc "Structure Class Recode"
+label variable sc26 "Type of Schedule"
+label variable uf23 "Year Built Recode"
+label variable rec62 "Plumbing Facilities Recode"
+label variable rec64 "Kitchen Facilities Recode"
+label variable uf32 "Rent per Room Recode"
+label variable rec21 "Condition of Building"
+label variable cd "Sub-borough Area"
+label variable seqno "Sequence Number"
+label variable fw "Final Housing Unit Weight"
+label variable hflag6 "Stories in building"
+label variable hflag3 "Rooms/Bedrooms"
+label variable hflag15 "Plumbing facilities"
+label variable hflag17 "Kitchen facilities"
+label variable hflag8 "Type of heating fuel"
+label variable hflag5 "Monthly asking rent"
+label variable fw1 "Replicate Weight #1"
+label variable fw2 "Replicate Weight #2"
+label variable fw3 "Replicate Weight #3"
+label variable fw4 "Replicate Weight #4"
+label variable fw5 "Replicate Weight #5"
+label variable fw6 "Replicate Weight #6"
+label variable fw7 "Replicate Weight #7"
+label variable fw8 "Replicate Weight #8"
+label variable fw9 "Replicate Weight #9"
+label variable fw10 "Replicate Weight #10"
+label variable fw11 "Replicate Weight #11"
+label variable fw12 "Replicate Weight #12"
+label variable fw13 "Replicate Weight #13"
+label variable fw14 "Replicate Weight #14"
+label variable fw15 "Replicate Weight #15"
+label variable fw16 "Replicate Weight #16"
+label variable fw17 "Replicate Weight #17"
+label variable fw18 "Replicate Weight #18"
+label variable fw19 "Replicate Weight #19"
+label variable fw20 "Replicate Weight #20"
+label variable fw21 "Replicate Weight #21"
+label variable fw22 "Replicate Weight #22"
+label variable fw23 "Replicate Weight #23"
+label variable fw24 "Replicate Weight #24"
+label variable fw25 "Replicate Weight #25"
+label variable fw26 "Replicate Weight #26"
+label variable fw27 "Replicate Weight #27"
+label variable fw28 "Replicate Weight #28"
+label variable fw29 "Replicate Weight #29"
+label variable fw30 "Replicate Weight #30"
+label variable fw31 "Replicate Weight #31"
+label variable fw32 "Replicate Weight #32"
+label variable fw33 "Replicate Weight #33"
+label variable fw34 "Replicate Weight #34"
+label variable fw35 "Replicate Weight #35"
+label variable fw36 "Replicate Weight #36"
+label variable fw37 "Replicate Weight #37"
+label variable fw38 "Replicate Weight #38"
+label variable fw39 "Replicate Weight #39"
+label variable fw40 "Replicate Weight #40"
+label variable fw41 "Replicate Weight #41"
+label variable fw42 "Replicate Weight #42"
+label variable fw43 "Replicate Weight #43"
+label variable fw44 "Replicate Weight #44"
+label variable fw45 "Replicate Weight #45"
+label variable fw46 "Replicate Weight #46"
+label variable fw47 "Replicate Weight #47"
+label variable fw48 "Replicate Weight #48"
+label variable fw49 "Replicate Weight #49"
+label variable fw50 "Replicate Weight #50"
+label variable fw51 "Replicate Weight #51"
+label variable fw52 "Replicate Weight #52"
+label variable fw53 "Replicate Weight #53"
+label variable fw54 "Replicate Weight #54"
+label variable fw55 "Replicate Weight #55"
+label variable fw56 "Replicate Weight #56"
+label variable fw57 "Replicate Weight #57"
+label variable fw58 "Replicate Weight #58"
+label variable fw59 "Replicate Weight #59"
+label variable fw60 "Replicate Weight #60"
+label variable fw61 "Replicate Weight #61"
+label variable fw62 "Replicate Weight #62"
+label variable fw63 "Replicate Weight #63"
+label variable fw64 "Replicate Weight #64"
+label variable fw65 "Replicate Weight #65"
+label variable fw66 "Replicate Weight #66"
+label variable fw67 "Replicate Weight #67"
+label variable fw68 "Replicate Weight #68"
+label variable fw69 "Replicate Weight #69"
+label variable fw70 "Replicate Weight #70"
+label variable fw71 "Replicate Weight #71"
+label variable fw72 "Replicate Weight #72"
+label variable fw73 "Replicate Weight #73"
+label variable fw74 "Replicate Weight #74"
+label variable fw75 "Replicate Weight #75"
+label variable fw76 "Replicate Weight #76"
+label variable fw77 "Replicate Weight #77"
+label variable fw78 "Replicate Weight #78"
+label variable fw79 "Replicate Weight #79"
+label variable fw80 "Replicate Weight #80"
+
+
+

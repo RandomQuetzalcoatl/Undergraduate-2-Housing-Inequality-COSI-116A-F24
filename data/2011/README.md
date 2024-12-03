@@ -1,0 +1,4 @@
+Caution Statement
+
+For the 2011 NYCHVS, a completely new sample was initially selected from the 2010 decennial census and updated by including newly created housing units, while the 2002 NYCHVS sample was selected from the 2000 census and updated for the 2005 and 2008 NYCHVSs.
+The 2011 NYCHVS was weighted based on the results from the 2010 decennial census, while the 2002, 2005, and 2008 NYCHVSs were all weighted based on results from the 2000 decennial census. Since surveys based on different censuses produce different results (2010 versus 2000), it will be difficult to compare various data from the 2011 NYCHVS to the 2008 NYCHVS and earlier years.

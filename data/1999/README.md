@@ -1,0 +1,5 @@
+Caution Statement
+
+The 1999 New York City Housing and Vacancy Survey (NYCHVS) housing unit and population counts were derived using a new weighting methodology and thus are not completely comparable to data from the 1996 and 1993 surveys. Therefore, data users should use caution in comparing 1999 data with existing data from the earlier surveys.
+
+As a final step in the weighting of the NYCHVS, factors are applied to the survey estimates of population and housing units to adjust for missed units and missed people in units. These factors are developed by controlling survey estimates to independently derived estimates of population and housing. In March 1991, a Census 2000 project: 1) reviewed 1990 housing unit estimates; 2) reviewed administrative records related to the housing stock; and 3) began research and development on methods to improve population and housing unit control estimates. A new methodology was developed and implemented that integrated housing and population estimates. This new methodology was introduced for the 1999 NYCHVS for the first time.

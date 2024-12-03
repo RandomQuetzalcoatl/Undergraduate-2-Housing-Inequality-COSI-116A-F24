@@ -1,0 +1,4 @@
+Caution Statement
+
+The 2008 NYCHVS used the same sample as in 2005 and 2002, drawn from Census 2000 and updated by including newly created housing units. The 1991 NYCHVS sample was selected from the 1990 census and updated for the 1993, 1996, and 1999 NYCHVSs.
+The 2008, 2005, and 2002 NYCHVSs were weighted based on the results from Census 2000 , while the 1991, 1993, 1996, and 1999 NYCHVSs were all weighted based on results from the 1990 decennial census. Since surveys based on different censuses produce different results, it may be difficult to compare data from the 2008, 2005, and 2002 NYCHVS to the 1999 NYCHVS and earlier years.
