@@ -37,7 +37,7 @@ const projection = d3.geoMercator()
 
 const path = d3.geoPath().projection(projection);
 
-d3.json("Borough Boundaries.geojson").then(data => {
+d3.json("data/Borough Boundaries.geojson").then(data => {
   const boroughs = svg.selectAll("path")
     .data(data.features)
     .enter()
