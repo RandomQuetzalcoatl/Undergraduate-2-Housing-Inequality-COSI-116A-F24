@@ -55,32 +55,49 @@
     <!-- Change viewbox to whatever you want, e.g. "0 0 1000 6000" This determines your aspect ratio and coordinate system -->    
     <!-- Delete all the sample SVG code below after the viewbox to before the closing tag. Populate this part of the SVG with D3. -->
     <svg id="vis-svg"
-      preserveAspectRatio="xMidYMid meet" class="marks" viewBox="0 0 1200 800">
-        
+      preserveAspectRatio="xMidYMid meet" class="marks" viewBox="0 0 1200 800">       
     </svg>
-    <h1>New York City</h1>
-        <div id="container">
+    <div id="visualization">
+      <!-- Scatterplot-->
+      <div id="container">
+        <h3>Scatterplot</h3>
+      <div id="scatterplot">
+        <svg></svg> <!-- Scatterplot here -->
+      </div>
+    </div>
+    
+      <!-- Main Map Section -->
+      <div id="container">
+        <h1>New York City</h1>
+        <div id="map-container">
+          <div id="map"></div>
           <div id="legend">
             <span id="legend-max">Max</span>
             <div id="legend-color-bar"></div>
             <span id="legend-min">0</span>
           </div>
-          <div id="map-container">
-            <div id="map"></div>
-          </div>
         </div>
-      
-        <label for="color-attribute">Color by:</label>
-        <select id="color-attribute">
-         <option value="RENT_AMOUNT_PAID">Rent Price</option>
-         <option value="OCC">Rental Vacancy Rate</option>
-        </select>
-
-        <label for="year-slider">Select Year:</label>
-        <input type="range" id="year-slider" min="0" max="10" step="1" value="10">
-        <span id="year-display">2021</span>
-  </div>
-  
+        <div id="settings">
+          <label for="color-attribute">Color by:</label>
+          <select id="color-attribute">
+            <option value="RENT_AMOUNT_PAID">Rent Price</option>
+            <option value="OCC">Rental Vacancy Rate</option>
+          </select>
+          <label for="year-slider">Select Year:</label>
+          <input type="range" id="year-slider" min="0" max="10" step="1" value="10">
+          <span id="year-display">2021</span>
+        </div>
+      </div>
+    
+      <div id="container">
+        <h3>Detail Graph</h3>
+      <!-- Detail Graph of specific data, changes based on selected borough -->
+      <div id="detail-graph">
+        <svg></svg>
+      </div>
+    </div>
+    </div>
+    
   <!-- Your writeup goes here -->
   <div class = "content-column">
 
