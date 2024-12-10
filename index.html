@@ -33,8 +33,7 @@
   
     <h1>Project Team 2: Topic, COSI 116A F23</h1>
     
-    <p><strong>Student One</strong>, <strong>Student Two</strong>, <strong>Student Three</strong></p>
-    
+    <p><strong>Alec Gallardo</strong>, <strong>Emmanuel Reyes</strong>, <strong>Raza Shahzad</strong>, and <strong>Akhil Lingutla</strong></p>
     <p>Project-long Course Project as part of COSI 116A: Information Visualization</a>, taught by <a href="https://cs.brandeis.edu/~dylan/">Prof. Dylan Cashman</a>, <a href="https://cs.brandeis.edu/">Brandeis University</a>.</p>
     
     
@@ -43,7 +42,7 @@
     <p><em>Summary of user needs and motivating questions.</em></p>
     
     <p><em>Expectation: There is a clear focus, and a developed explanation of the problem, and a reasonable response is proposed.</em></p>
-
+    <p>Housing inequality in urban areas is an issue that impacts millions of people, especially in densely populated areas like NYC. It is essential to analyze and understand the housing disparity patterns of these cities and the factors that affect housing quality. Our project includes housing costs data for NYC from 1991 to 2021. We considered questions like ‘how do housing factors like vacancy rates and rent prices vary in different neighborhoods of NYC?’, ‘do factors like unemployment, rent prices, income, etc affect the housing quality?’, “what roles do transportation access and other things like quality education play in terms of ”</p>
     
     <h1>Visualization</h1>
     
@@ -56,7 +55,7 @@
     <!-- Change viewbox to whatever you want, e.g. "0 0 1000 6000" This determines your aspect ratio and coordinate system -->    
     <!-- Delete all the sample SVG code below after the viewbox to before the closing tag. Populate this part of the SVG with D3. -->
     <svg id="vis-svg"
-      preserveAspectRatio="xMidYMid meet" class="marks" viewBox="0 0 821 520">
+      preserveAspectRatio="xMidYMid meet" class="marks" viewBox="0 0 1200 800">
         
     </svg>
     <h1>New York City</h1>
@@ -73,13 +72,13 @@
       
         <label for="color-attribute">Color by:</label>
         <select id="color-attribute">
-          <option value="shape_area">Rent Price</option>
-          <option value="shape_leng">Occupancy Rate</option>
-          <option value="boro_code">Borough Code</option>
+         <option value="RENT_AMOUNT_PAID">Rent Price</option>
+         <option value="OCC">Rental Vacancy Rate</option>
         </select>
+
         <label for="year-slider">Select Year:</label>
-        <input type="range" id="year-slider" min="0" max="10" step="1" value="0">
-        <span id="year-display">1991</span>
+        <input type="range" id="year-slider" min="0" max="10" step="1" value="10">
+        <span id="year-display">2021</span>
   </div>
   
   <!-- Your writeup goes here -->
@@ -101,14 +100,18 @@
 
     <h1>Data Analysis</h1>
     <p><em>Summary of data, data types, and data preprocessing.</em></p>
-
+    <p>The dataset we are using explores housing inequality across New York City boroughs by examining key variables such as vacancy rates, elevator availability, income levels, building characteristics, etc. We are looking from the year 1991-2021 and our data is from New York City Housing and Vacancy Surveys. Data preprocessing involved mapping numerical values (e.g., BORO = 1 to Manhattan) to meaningful labels, deriving metrics like average vacancy rates and income by borough, and cleaning invalid or missing data. Additional variables such as population density, rent prices, unemployment rates, and proximity to public transportation could enhance the analysis by providing deeper context. For example, comparing vacancy rates with income and poverty levels highlights economic disparities, while incorporating walkability scores or crime rates can reveal factors affecting housing demand. Various visualizations, including scatter plots, bar graphs, and line charts, were used to illustrate trends and correlations, such as higher vacancy rates in lower-income boroughs like the Bronx. </p>
     <p><em>Expectation: Data sources match the problem statement and are appropriate. These descriptions should be very explicit so someone could read your page and properly reproduce your results.</em></p>
 
     <h1>Task Analysis</h1>
 
     <p><em>Summary of task table.</em></p>
-
     <p><em>Expectation: Clearly describes domain tasks, processes, goals and abstract tasks for domain problems.</em></p>
+    <p>Task 1 which is “How do housing costs differ within New York City?” discovers data on housing costs across the different neighborhoods in New York City. Its goal is to identify patterns and variations in the housing costs. We will then explore trends in the dataset and identify outliers as well, with the goal to provide a spatial understanding of the cost differences between the neighborhoods. Then we will compare contrasting costs and highlight the disparities between the areas.</p>
+    <p>Task 2 is “How does housing affordability compare between New York and Boston?”. Although we were able to find a dataset for housing costs and the factors that influence those costs in NYC, we were never able to find a similar dataset for Boston; hence, we cannot really develop on task 2 as we need a similar dataset to draw accurate conclusions from the comparison between the two cities. </p>
+    <p>Task 3 is “How have housing costs changed over the past decade in these cities?”. In this task, we will present the housing costs data of NYC from 1991-2021 with the goal to highlight and compare the housing costs and trends in those years. Then we will convert that data into visualizations to facilitate quicker access to the data for browsing it. This will also provide a summary of the housing costs data over the years.</p>
+    <p>Task 4 is “What demographic factors influence housing inequality in these cities?”. In this task, we will consider various factors like income, rent prices, unemployment rates, etc to compare the housing disparities within NYC. This uncovers the potential causes of housing inequality. </p>
+    
 
     <h1>Design Process</h1>
     
