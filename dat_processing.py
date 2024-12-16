@@ -32,20 +32,20 @@ VAC_FILE_PATHS = {
 
 # Character mapping for each variable per year, this is to tell the program where it should be looking in the .dat file 
 YEAR_CONFIGS = {
-    1991: {"borough": (2, 2), "gross_monthly_rent": (196, 199), "vacancy_status": (47, 47)},
-    1993: {"borough": (2, 2), "gross_monthly_rent": (196, 199), "vacancy_status": (47, 47)},
-    1996: {"borough": (2, 2), "gross_monthly_rent": (196, 199), "vacancy_status": (47, 47)},
-    1999: {"borough": (2, 2), "gross_monthly_rent": (233, 236), "vacancy_status": (55, 55)},
-    2002: {"borough": (2, 2), "gross_monthly_rent": (238, 241), "vacancy_status": (55, 55)},
-    2005: {"borough": (2, 2), "gross_monthly_rent": (288, 291), "vacancy_status": (55, 55)},
-    2008: {"borough": (2, 2), "gross_monthly_rent": (445, 448), "vacancy_status": (55, 55)},
-    2011: {"borough": (2, 2), "gross_monthly_rent": (445, 449), "vacancy_status": (55, 55)},
-    2014: {"borough": (2, 2), "gross_monthly_rent": (445, 449), "vacancy_status": (55, 55)},
-    2017: {"borough": (2, 2), "gross_monthly_rent": (445, 449), "vacancy_status": (54, 54)}
+    1991: {"borough": (2, 2), "gross_monthly_rent": (196, 199), "vacancy_status": (47, 47), "income": (215,220)},
+    1993: {"borough": (2, 2), "gross_monthly_rent": (196, 199), "vacancy_status": (47, 47), "income": (215,220)},
+    1996: {"borough": (2, 2), "gross_monthly_rent": (196, 199), "vacancy_status": (47, 47), "income": (215,220)},
+    1999: {"borough": (2, 2), "gross_monthly_rent": (233, 236), "vacancy_status": (55, 55), "income": (246,251)},
+    2002: {"borough": (2, 2), "gross_monthly_rent": (238, 241), "vacancy_status": (55, 55), "income": (251,257)},
+    2005: {"borough": (2, 2), "gross_monthly_rent": (288, 291), "vacancy_status": (55, 55), "income": (301,307)},
+    2008: {"borough": (2, 2), "gross_monthly_rent": (445, 448), "vacancy_status": (55, 55), "income": (458,464)},
+    2011: {"borough": (2, 2), "gross_monthly_rent": (445, 449), "vacancy_status": (55, 55), "income": (459,465)},
+    2014: {"borough": (2, 2), "gross_monthly_rent": (445, 449), "vacancy_status": (55, 55), "income": (459,465)},
+    2017: {"borough": (2, 2), "gross_monthly_rent": (445, 449), "vacancy_status": (54, 54), "income": (459,465)}
 }
 
 # Which variables to use when looking through OCC and VAC .dat files respectively, borough has the same mapping for both
-OCC_VARIABLES = {"borough", "gross_monthly_rent"}
+OCC_VARIABLES = {"borough", "gross_monthly_rent", "income"}
 VAC_VARIABLES = {"borough", "vacancy_status"}
 
 def parse_dat_file(file_path, year, variables):
