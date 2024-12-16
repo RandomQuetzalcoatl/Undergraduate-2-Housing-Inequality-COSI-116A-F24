@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housing Inequality Project</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        header {
+            background: linear-gradient(to right, black,black);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Tab Styles */
+        .tab {
+            overflow: hidden;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+        }
+
+        .tab button {
+            background-color: inherit;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 1rem;
+            transition: 0.3s;
+            font-size: 1rem;
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab button:hover, .tab button.active {
+            background-color: black;
+            color: white;
+        }
+
+        .tabcontent {
+            display: none;
+            padding: 2rem 1rem;
+        }
+
+        .active-content {
+            display: block;
+        }
+
+        /* Scatterplot Styling */
+        svg {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: #f4f4f4;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: none;
+            pointer-events: none;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Housing Inequality Project</h1>
+        <h2> By Alec Gallardo, Akhil Lingutla, Emmanuel Reyes, and Raza Shahzad</h2>
+        <h3>About Our Project</h3>
+        <p>
+            Our project analyzes housing inequality in major American cities, with a primary focus on New York. 
+            We aim to uncover trends in housing prices, demographic data, and public infrastructure that illustrate 
+            how housing inequality impacts different regions.
+        </p>
+        <img src="nyc-boroughs-map.jpg"  width="700" height="500">
+    </header>
+    <div class="container">
+        <!-- Tab Navigation -->
+        <div class="tab">
+            <button class="tablinks active" onclick="openTab(event, 'Explanation')">Explanation</button>
+            <button class="tablinks" onclick="openTab(event, 'InteractivePlot')">Interactive Plot</button>
+        </div>
+
+        <!-- Tab 1: Explanation -->
+        <div id="Explanation" class="tabcontent active-content">
+            <h2>About the Scatterplot</h2>
+            <p>
+                This scatterplot visualizes housing inequality in New York City in 2021 by showing the relationship between 
+                <strong>number of units</strong> in a building (x-axis) and the <strong>number of stories</strong> (y-axis). 
+                Each green dot represents a housing unit, with slight jitter applied to avoid overplotting. 
+            </p>
+            <img src="Scatterplot.png" alt="Scatterplot of Units vs Stories in NYC 2021" style="width:100%; border-radius: 10px;">
+        </div>
+
+        <!-- Tab 2: Interactive Plot -->
+        <div id="InteractivePlot" class="tabcontent">
+            <h2>Interactive Scatterplot</h2>
+            <svg id="scatterplot" width="800" height="500"></svg>
+            <div id="tooltip" class="tooltip"></div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Functionality
+        function openTab(evt, tabName) {
+    const tabcontent = document.querySelectorAll(".tabcontent");
+    tabcontent.forEach(content => content.classList.remove("active-content"));
+
+    const tablinks = document.querySelectorAll(".tablinks");
+    tablinks.forEach(link => link.classList.remove("active"));
+
+    document.getElementById(tabName).classList.add("active-content");
+    evt.currentTarget.classList.add("active");
+
+    // Reinitialize the scatterplot if the "InteractivePlot" tab is active
+    if (tabName === "InteractivePlot") {
+        initializeScatterplot();
+    }
+}
+// Using Akhil's code to initialize the scatterplot into the website
+function initializeScatterplot() {
+    const svg = d3.select("#scatterplot");
+    if (!svg.select("circle").empty()) return; 
+
+    d3.csv("allunits_puf_21.csv").then(function (data) {
+        const jitterAmount = 2;
+        data.forEach(d => {
+            d.UNITS = +d.UNITS + (Math.random() - 0.5) * jitterAmount; 
+            d.STORIES = +d.STORIES + (Math.random() - 0.5) * jitterAmount; 
+        });
+
+        const filteredData = data.filter(d => d.UNITS > 0 && d.STORIES > 0);
+        const width = 800, height = 500;
+        const margin = { top: 20, right: 30, bottom: 50, left: 70 };
+
+        const x = d3.scaleLinear()
+            .domain(d3.extent(filteredData, d => d.UNITS)) 
+            .range([margin.left, width - margin.right]);
+
+        const y = d3.scaleLinear()
+            .domain(d3.extent(filteredData, d => d.STORIES)) 
+            .range([height - margin.bottom, margin.top]);
+
+        svg.append("g")
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+            .call(d3.axisBottom(x).ticks(10));
+
+        svg.append("g")
+            .attr("transform", `translate(${margin.left},0)`)
+            .call(d3.axisLeft(y).ticks(10));
+
+        const tooltip = d3.select(".tooltip");
+
+        svg.selectAll(".dot")
+            .data(filteredData)
+            .enter()
+            .append("circle")
+            .attr("cx", d => x(d.UNITS))
+            .attr("cy", d => y(d.STORIES))
+            .attr("r", 3)
+            .attr("fill", "green")
+            .on("mouseover", (event, d) => {
+                tooltip.style("display", "block")
+                    .style("left", `${event.pageX + 10}px`)
+                    .style("top", `${event.pageY - 10}px`)
+                    .html(`Units: ${d.UNITS.toFixed(2)}<br>Stories: ${d.STORIES.toFixed(2)}`);
+            })
+            .on("mouseout", () => {
+                tooltip.style("display", "none");
+            });
+    }).catch(error => {
+        console.error("Error loading data:", error);
+    });
+}
+    </script>
+</body>
+</html>
+
+
+
+
