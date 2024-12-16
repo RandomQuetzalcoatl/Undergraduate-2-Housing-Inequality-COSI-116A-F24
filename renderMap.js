@@ -30,6 +30,7 @@ const occLabels = {
   3: "Vacant, available for sale only",
   4: "Vacant, not available"
 };
+
 const attributeLabels = {
   RENT_AMOUNT_PAID: "Average Rent",
   OCC: "Net Vacancy Rate"
@@ -91,6 +92,7 @@ function initialize() {
 
 // Function to load and update the map based on the selected year
 function loadAndUpdateMap(selectedYear) {
+  if(selectedYear==2021) {
   const allUnitsPath = `/data/${selectedYear}/allunits_puf_${selectedYear.slice(-2)}.csv`;
   const occupiedPath = `/data/${selectedYear}/occupied_puf_${selectedYear.slice(-2)}.csv`;
 
@@ -108,6 +110,25 @@ function loadAndUpdateMap(selectedYear) {
       updateMapColors(currentAttribute, mapData, geoData);
     });
   }).catch(error => console.error("Error loading data files:", error));
+} else {
+    const occPath = `DATA/${selectedYear}/occ_data_${selectedYear}.csv`;
+    const vacPath = `DATA/${selectedYear}/vac_data_${selectedYear}.csv`;
+  
+    Promise.all([d3.csv(occPath), d3.csv(vacPath)]).then(([occupied, vacant]) => {
+      allUnitsData = preprocessVacData(occupied, vacant)
+      rentData = preprocessOccData(occupied);
+      vacancyRateData = calculateVacancyRate(allUnitsData);
+  
+      d3.json("DATA/Borough Boundaries.geojson").then(geoData => {
+        const mapData = {
+          RENT_AMOUNT_PAID: averageRentData(rentData),
+          OCC: vacancyRateData
+        };
+  
+        updateMapColors(currentAttribute, mapData, geoData);
+      });
+    }).catch(error => console.error("Error loading data files:", error));
+  }
 }
 
 function updateMapColors(attribute, mapData, geoData) {
@@ -205,7 +226,6 @@ function calculateVacancyRate(allUnitsData) {
       boroughStats[boroName].vacant += 1;
     }
   });
-
   return Object.fromEntries(
     Object.entries(boroughStats).map(([boroName, stats]) => {
       const netVacancyRate = stats.vacant / (stats.occupied + stats.vacant);
@@ -213,6 +233,50 @@ function calculateVacancyRate(allUnitsData) {
     })
   );
 }
+
+function preprocessVacData(occData, vacData) {
+  const processedOccData = occData.map(row => ({
+    ...row,
+    OCC: "1",
+    BORO: row.borough 
+  }));
+
+  const processedVacData = vacData.map(row => ({
+    ...row,
+    OCC: (parseInt(row.vacancy_status, 10) + 1).toString(),
+    BORO: row.borough
+  }));
+
+  const allUnits = [...processedOccData, ...processedVacData];
+  return allUnits;
+}
+
+function preprocessOccData(occData) {
+  if (!Array.isArray(occData)) {
+    console.error("Invalid input to preprocessOccData:", occData);
+    boroughRentData = {};
+    return [];
+  }
+
+  const processedData = occData
+    .filter(row => +row.gross_monthly_rent > 0 && +row.gross_monthly_rent !== 9999) 
+    .map(row => ({
+      boro_name: boroughMapping[+row.borough], 
+      rent_paid: +row.gross_monthly_rent  
+    }));
+
+  boroughRentData = processedData.reduce((acc, row) => {
+    if (!acc[row.boro_name]) {
+      acc[row.boro_name] = [];
+    }
+    acc[row.boro_name].push(row.rent_paid);
+    return acc;
+  }, {});
+
+  console.log("Updated boroughRentData:", boroughRentData);
+  return processedData;
+}
+
 
 //Gets 
 function averageRentData(mergedData) {
@@ -240,6 +304,7 @@ function createBuckets(data, step = 250) {
 
 // Update the renderDetailGraph function
 function renderDetailGraph() {
+  console.log("render graph")
   const graphContainer = d3.select("#detail-graph");
   const graphSvg = graphContainer.select("svg");
   graphSvg.selectAll("*").remove(); // Clear existing graph
