@@ -259,7 +259,7 @@ function preprocessOccData(occData) {
   }
 
   const processedData = occData
-    .filter(row => +row.gross_monthly_rent > 0 && +row.gross_monthly_rent !== 9999) 
+    .filter(row => +row.gross_monthly_rent > 0 && +row.gross_monthly_rent !== 9999 && +row.gross_monthly_rent !== 99999) 
     .map(row => ({
       boro_name: boroughMapping[+row.borough], 
       rent_paid: +row.gross_monthly_rent  

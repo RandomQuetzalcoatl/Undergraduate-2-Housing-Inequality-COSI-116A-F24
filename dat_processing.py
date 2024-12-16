@@ -10,7 +10,10 @@ OCC_FILE_PATHS = {
     1999: "DATA/1999/occ99ufl99.dat",
     2002: "DATA/2002/lng08_occ02_rev.dat",
     2005: "DATA/2005/lng08_occ05_rev.dat",
-    2008: "DATA/2008/lng08_occ08_rev.dat"
+    2008: "DATA/2008/lng08_occ08_rev.dat",
+    2011: "DATA/2011/uf_11_repwgt_occ_web.txt",
+    2014: "DATA/2014/uf_14_repwgt_occ_web.txt",
+    2017: "DATA/2017/uf_17_occ_web_b.txt",
 }
 
 # File paths for each year of vacant datasets
@@ -21,7 +24,10 @@ VAC_FILE_PATHS = {
     1999: "DATA/1999/vac99ufl99.dat",
     2002: "DATA/2002/lng08_vac02_web.dat",
     2005: "DATA/2005/lng08_vac05_web.dat",
-    2008: "DATA/2008/lng08_vac08_web.dat"
+    2008: "DATA/2008/lng08_vac08_web.dat",
+    2011: "DATA/2011/uf_11_repwgt_vac_web.txt",
+    2014: "DATA/2014/uf_14_repwgt_vac_web.txt",
+    2017: "DATA/2017/uf_17_vac_web_b.txt"
 }
 
 # Character mapping for each variable per year, this is to tell the program where it should be looking in the .dat file 
@@ -32,7 +38,10 @@ YEAR_CONFIGS = {
     1999: {"borough": (2, 2), "gross_monthly_rent": (233, 236), "vacancy_status": (55, 55)},
     2002: {"borough": (2, 2), "gross_monthly_rent": (238, 241), "vacancy_status": (55, 55)},
     2005: {"borough": (2, 2), "gross_monthly_rent": (288, 291), "vacancy_status": (55, 55)},
-    2008: {"borough": (2, 2), "gross_monthly_rent": (445, 448), "vacancy_status": (55, 55)}
+    2008: {"borough": (2, 2), "gross_monthly_rent": (445, 448), "vacancy_status": (55, 55)},
+    2011: {"borough": (2, 2), "gross_monthly_rent": (445, 449), "vacancy_status": (55, 55)},
+    2014: {"borough": (2, 2), "gross_monthly_rent": (445, 449), "vacancy_status": (55, 55)},
+    2017: {"borough": (2, 2), "gross_monthly_rent": (445, 449), "vacancy_status": (54, 54)}
 }
 
 # Which variables to use when looking through OCC and VAC .dat files respectively, borough has the same mapping for both
