@@ -76,65 +76,71 @@ const path = d3.geoPath().projection(projection);
 // Initialization function
 function initialize() {
   // Gets year slider and displays year
-    const yearSlider = document.getElementById("year-slider");
-    const yearDisplay = document.getElementById("year-display");
-    currentYear = years[yearSlider.value].split(" ")[0]; // Updates global variable for year
-    yearDisplay.textContent = currentYear;
+  const yearSlider = document.getElementById("year-slider");
+  const yearDisplay = document.getElementById("year-display");
+  currentYear = years[yearSlider.value].split(" ")[0]; // Updates global variable for year
+  yearDisplay.textContent = currentYear;
 
-    Promise.all(years.map((yearEntry, index) => {
-      const year = yearEntry.split(" ")[0]; // Extract year from string
-      if (year === "2021") {
-        const allUnitsPath = `/data/${year}/allunits_puf_${year.slice(-2)}.csv`;
-        const occupiedPath = `/data/${year}/occupied_puf_${year.slice(-2)}.csv`;
-  
-        return Promise.all([d3.csv(allUnitsPath), d3.csv(occupiedPath)]).then(([allUnits, occupied]) => {
-          const mergedRent = mergeRentData(allUnits, occupied, year);
-          const vacancyRate = calculateVacancyRate(allUnits);
-          saveData[year] = {
-            allUnitsData: allUnits,
-            rentData: mergedRent,
-            vacancyRateData: vacancyRate,
-            boroughRentData: saveData[year]["boroughRentData"], // Pre-populated in mergeRentData
-          };
-        });
-      } else {
-        const occPath = `DATA/${year}/occ_data_${year}.csv`;
-        const vacPath = `DATA/${year}/vac_data_${year}.csv`;
-  
-        return Promise.all([d3.csv(occPath), d3.csv(vacPath)]).then(([occupied, vacant]) => {
-          const allUnits = preprocessVacData(occupied, vacant);
-          const rent = preprocessOccData(occupied, year);
-          const vacancyRate = calculateVacancyRate(allUnits);
-          saveData[year] = {
-            allUnitsData: allUnits,
-            rentData: rent,
-            vacancyRateData: vacancyRate,
-            boroughRentData: saveData[year]["boroughRentData"], // Pre-populated in preprocessOccData
-          };
-        });
-      }
-    }))
+  Promise.all(years.map(yearEntry => {
+    const year = yearEntry.split(" ")[0]; // Extract year from string
+    if (year === "2021") {
+      const allUnitsPath = `/data/${year}/allunits_puf_${year.slice(-2)}.csv`;
+      const occupiedPath = `/data/${year}/occupied_puf_${year.slice(-2)}.csv`;
 
-  // Add event listener to the year slider
-  yearSlider.addEventListener("input", function () {
-    const yearIndex = +yearSlider.value;
-    currentYear = years[yearIndex].split(" ")[0];
-    yearDisplay.textContent = currentYear;
+      return Promise.all([d3.csv(allUnitsPath), d3.csv(occupiedPath)]).then(([allUnits, occupied]) => {
+        const mergedRent = mergeRentData(allUnits, occupied, year);
+        const vacancyRate = calculateVacancyRate(allUnits);
+        saveData[year] = {
+          allUnitsData: allUnits,
+          rentData: mergedRent,
+          vacancyRateData: vacancyRate,
+          boroughRentData: saveData[year]["boroughRentData"], // Pre-populated in mergeRentData
+        };
+      });
+    } else {
+      const occPath = `DATA/${year}/occ_data_${year}.csv`;
+      const vacPath = `DATA/${year}/vac_data_${year}.csv`;
+
+      return Promise.all([d3.csv(occPath), d3.csv(vacPath)]).then(([occupied, vacant]) => {
+        const allUnits = preprocessVacData(occupied, vacant);
+        const rent = preprocessOccData(occupied, year);
+        const vacancyRate = calculateVacancyRate(allUnits);
+        saveData[year] = {
+          allUnitsData: allUnits,
+          rentData: rent,
+          vacancyRateData: vacancyRate,
+          boroughRentData: saveData[year]["boroughRentData"], // Pre-populated in preprocessOccData
+        };
+      });
+    }
+  })).then(() => {
+    
+    // Initializes graphs in a then so we no longer have the synchronicity errors
     loadAndUpdateMap(currentYear);
     renderDetailGraph();
-  });
+    renderTimeGraph();
 
-  // Add event listener for attribute changes
-  d3.select("#color-attribute").on("change", function () {
+    // Add event listener to the year slider
+    yearSlider.addEventListener("input", function () {
+      const yearIndex = +yearSlider.value;
+      currentYear = years[yearIndex].split(" ")[0];
+      yearDisplay.textContent = currentYear;
+      loadAndUpdateMap(currentYear);
+      renderDetailGraph();
+    });
+
+    // Add event listener for attribute changes
+    d3.select("#color-attribute").on("change", function () {
     currentAttribute = d3.select(this).property("value"); //Updates global variable for attribute
-    loadAndUpdateMap(currentYear); // Reload map with the current year
-    renderDetailGraph();
+      loadAndUpdateMap(currentYear); // Reload map with the current year
+      renderDetailGraph();
+      renderTimeGraph();
+    });
+  }).catch(error => {
+    console.error("Error loading data:", error);
   });
-  
-  // Initializes map with current year
-  loadAndUpdateMap(currentYear);
-  renderDetailGraph();
 }
+
 
 // Function to load and update the map based on the selected year
 function loadAndUpdateMap(selectedYear) {
@@ -187,6 +193,7 @@ function updateMapColors(attribute, mapData, geoData) {
       }
   
       renderDetailGraph();
+      renderTimeGraph();
     })
     .each(function (d) { //ensures tooltip is updated
       const boroName = d.properties.boro_name;
@@ -494,5 +501,109 @@ function renderOCCGraph(year, boroughName) {
     .text(d => `${occLabels[d.label] || `OCC ${d.label}`}\nCount: ${d.count}`);
 }
 
-// Initialize graphs, for some reason I can't get the detail graph to work immediately, need to come back to that
+//May implement brushing with this, where it overwrites the time slider with whatever years are selected
+//Would need a fair bit of work to make the other functions be able to process multiple years together
+function renderTimeGraph() {
+  const graphContainer = d3.select("#time-chart");
+  const graphSvg = graphContainer.select("svg");
+  graphSvg.selectAll("*").remove();
+
+  graphContainer.select(".time-chart-title").remove();
+
+  //Chooses title based on attribute and whether a borough is selected
+  const title = currentAttribute === "RENT_AMOUNT_PAID"
+    ? `Average Rent Over Time${selectedBorough ? ` for ${selectedBorough}` : ""}`
+    : currentAttribute === "OCC"
+    ? `Net Vacancy Rate Over Time${selectedBorough ? ` for ${selectedBorough}` : ""}`
+    : "Line Chart";
+
+  const graphWidth = parseInt(graphContainer.style("width"));
+  const graphHeight = parseInt(graphContainer.style("height")) * 0.8;
+
+  graphSvg
+    .attr("width", graphWidth)
+    .attr("height", graphHeight);
+  graphContainer.insert("h4", ":first-child")
+    .attr("class", "time-chart-title")
+    .text(title);
+
+//Gets all the entries from global variable saveData
+  const timeData = years.map(yearEntry => {
+    const year = yearEntry.split(" ")[0];
+    const data = saveData[year];
+    if (!data) return null;
+
+    if (currentAttribute === "RENT_AMOUNT_PAID") { //will do overall average rent for year
+      const boroughData = selectedBorough ? data.boroughRentData[selectedBorough] : Object.values(data.boroughRentData).flat();
+      const avgRent = boroughData && boroughData.length > 0 ? d3.mean(boroughData) : null;
+      return avgRent !== null ? { year, value: avgRent } : null;
+    } else if (currentAttribute === "OCC") { //will do overall average net vacancy rate for year
+      if (selectedBorough) {
+        const boroughUnits = data.allUnitsData.filter(d => boroughMapping[d.BORO] === selectedBorough);
+        const vacancyRates = boroughUnits.map(d => d.OCC === "2" ? 1 : 0);
+        const avgVacancy = vacancyRates.length > 0 ? d3.mean(vacancyRates) : null;
+        return avgVacancy !== null ? { year, value: avgVacancy } : null;
+      } else {
+        const avgVacancy = d3.mean(Object.values(data.vacancyRateData));
+        return avgVacancy !== null ? { year, value: avgVacancy } : null;
+      }
+    }
+    return null;
+  }).filter(d => d !== null);
+
+  if (timeData.length === 0) {
+    graphSvg.append("text")
+      .attr("x", "50%")
+      .attr("y", "50%")
+      .attr("text-anchor", "middle")
+      .text("No data available for this attribute");
+    return;
+  }
+
+  const x = d3.scaleLinear()
+    .domain(d3.extent(timeData, d => +d.year))
+    .range([50, graphWidth - 50]);
+
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(timeData, d => d.value)])
+    .nice()
+    .range([graphHeight - 50, 50]);
+
+  const xAxis = d3.axisBottom(x).tickFormat(d3.format("d"));
+  const yAxis = d3.axisLeft(y);
+
+  graphSvg.append("g")
+    .attr("transform", `translate(0, ${graphHeight - 50})`)
+    .call(xAxis);
+
+  graphSvg.append("g")
+    .attr("transform", "translate(50, 0)")
+    .call(yAxis);
+
+  const line = d3.line()
+    .x(d => x(+d.year))
+    .y(d => y(d.value))
+    .curve(d3.curveMonotoneX);
+
+  graphSvg.append("path")
+    .datum(timeData)
+    .attr("fill", "none")
+    .attr("stroke", "#69b3a2")
+    .attr("stroke-width", 2)
+    .attr("d", line);
+
+  graphSvg.selectAll(".point")
+    .data(timeData)
+    .enter()
+    .append("circle")
+    .attr("class", "point")
+    .attr("cx", d => x(+d.year))
+    .attr("cy", d => y(d.value))
+    .attr("r", 4)
+    .attr("fill", "#69b3a2")
+    .append("title")
+    .text(d => `Year: ${d.year}\nValue: ${d.value.toFixed(2)}`);
+}
+
+// Initialize graphs
 initialize();
