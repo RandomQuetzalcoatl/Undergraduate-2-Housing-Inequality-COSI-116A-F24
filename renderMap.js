@@ -42,10 +42,22 @@ let currentYear = "2021";
 let selectedBorough = null;
 
 //Data Variables
-let boroughRentData = {};
-let rentData = {};
-let vacancyRateData = {};
-let allUnitsData = [];
+const saveData = {
+  boroughRentData: {},
+  rentData: {},
+  vacancyRateData: {},
+  allUnitsData: {},
+};
+
+years.forEach(yearEntry => {
+  const year = yearEntry.split(" ")[0];
+  saveData[year] = {
+    allUnitsData: {},
+    rentData: {},
+    vacancyRateData: {},
+    boroughRentData: {},
+  };
+});
 
 const svg = d3.select("#map")
   .append("svg")
@@ -64,10 +76,44 @@ const path = d3.geoPath().projection(projection);
 // Initialization function
 function initialize() {
   // Gets year slider and displays year
-  const yearSlider = document.getElementById("year-slider");
-  const yearDisplay = document.getElementById("year-display");
-  currentYear = years[yearSlider.value].split(" ")[0]; // Updates global variable for year
-  yearDisplay.textContent = currentYear;
+    const yearSlider = document.getElementById("year-slider");
+    const yearDisplay = document.getElementById("year-display");
+    currentYear = years[yearSlider.value].split(" ")[0]; // Updates global variable for year
+    yearDisplay.textContent = currentYear;
+
+    Promise.all(years.map((yearEntry, index) => {
+      const year = yearEntry.split(" ")[0]; // Extract year from string
+      if (year === "2021") {
+        const allUnitsPath = `/data/${year}/allunits_puf_${year.slice(-2)}.csv`;
+        const occupiedPath = `/data/${year}/occupied_puf_${year.slice(-2)}.csv`;
+  
+        return Promise.all([d3.csv(allUnitsPath), d3.csv(occupiedPath)]).then(([allUnits, occupied]) => {
+          const mergedRent = mergeRentData(allUnits, occupied, year);
+          const vacancyRate = calculateVacancyRate(allUnits);
+          saveData[year] = {
+            allUnitsData: allUnits,
+            rentData: mergedRent,
+            vacancyRateData: vacancyRate,
+            boroughRentData: saveData[year]["boroughRentData"], // Pre-populated in mergeRentData
+          };
+        });
+      } else {
+        const occPath = `DATA/${year}/occ_data_${year}.csv`;
+        const vacPath = `DATA/${year}/vac_data_${year}.csv`;
+  
+        return Promise.all([d3.csv(occPath), d3.csv(vacPath)]).then(([occupied, vacant]) => {
+          const allUnits = preprocessVacData(occupied, vacant);
+          const rent = preprocessOccData(occupied, year);
+          const vacancyRate = calculateVacancyRate(allUnits);
+          saveData[year] = {
+            allUnitsData: allUnits,
+            rentData: rent,
+            vacancyRateData: vacancyRate,
+            boroughRentData: saveData[year]["boroughRentData"], // Pre-populated in preprocessOccData
+          };
+        });
+      }
+    }))
 
   // Add event listener to the year slider
   yearSlider.addEventListener("input", function () {
@@ -92,43 +138,14 @@ function initialize() {
 
 // Function to load and update the map based on the selected year
 function loadAndUpdateMap(selectedYear) {
-  if(selectedYear==2021) {
-  const allUnitsPath = `/data/${selectedYear}/allunits_puf_${selectedYear.slice(-2)}.csv`;
-  const occupiedPath = `/data/${selectedYear}/occupied_puf_${selectedYear.slice(-2)}.csv`;
-
-  Promise.all([d3.csv(allUnitsPath), d3.csv(occupiedPath)]).then(([allUnits, occupied]) => {
-    allUnitsData = allUnits;
-    rentData = mergeRentData(allUnits, occupied);
-    vacancyRateData = calculateVacancyRate(allUnits);
-
-    d3.json("data/Borough Boundaries.geojson").then(geoData => {
+  d3.json("data/Borough Boundaries.geojson").then(geoData => {
       const mapData = {
-        RENT_AMOUNT_PAID: averageRentData(rentData),
-        OCC: vacancyRateData
+        RENT_AMOUNT_PAID: averageRentData(saveData[selectedYear].rentData),
+        OCC: saveData[selectedYear].vacancyRateData
       };
 
       updateMapColors(currentAttribute, mapData, geoData);
-    });
-  }).catch(error => console.error("Error loading data files:", error));
-} else {
-    const occPath = `DATA/${selectedYear}/occ_data_${selectedYear}.csv`;
-    const vacPath = `DATA/${selectedYear}/vac_data_${selectedYear}.csv`;
-  
-    Promise.all([d3.csv(occPath), d3.csv(vacPath)]).then(([occupied, vacant]) => {
-      allUnitsData = preprocessVacData(occupied, vacant)
-      rentData = preprocessOccData(occupied);
-      vacancyRateData = calculateVacancyRate(allUnitsData);
-  
-      d3.json("DATA/Borough Boundaries.geojson").then(geoData => {
-        const mapData = {
-          RENT_AMOUNT_PAID: averageRentData(rentData),
-          OCC: vacancyRateData
-        };
-  
-        updateMapColors(currentAttribute, mapData, geoData);
-      });
     }).catch(error => console.error("Error loading data files:", error));
-  }
 }
 
 function updateMapColors(attribute, mapData, geoData) {
@@ -187,7 +204,7 @@ function updateMapColors(attribute, mapData, geoData) {
 //View functions
 
 //Rent Amount
-function mergeRentData(allUnitsData, occupiedData) {
+function mergeRentData(allUnitsData, occupiedData, year) {
   const rentMap = new Map();
   occupiedData.forEach(row => {
     if (row.RENTPAID_AMOUNT > 0) {
@@ -202,7 +219,7 @@ function mergeRentData(allUnitsData, occupiedData) {
       rent_paid: rentMap.get(row.CONTROL)
     }));
 
-  boroughRentData = mergedData.reduce((acc, row) => {
+  saveData[year]["boroughRentData"] = mergedData.reduce((acc, row) => {
     if (!acc[row.boro_name]) acc[row.boro_name] = [];
     acc[row.boro_name].push(row.rent_paid);
     return acc;
@@ -251,7 +268,7 @@ function preprocessVacData(occData, vacData) {
   return allUnits;
 }
 
-function preprocessOccData(occData) {
+function preprocessOccData(occData, year) {
   if (!Array.isArray(occData)) {
     console.error("Invalid input to preprocessOccData:", occData);
     boroughRentData = {};
@@ -259,13 +276,13 @@ function preprocessOccData(occData) {
   }
 
   const processedData = occData
-    .filter(row => +row.gross_monthly_rent > 0 && +row.gross_monthly_rent !== 9999 && +row.gross_monthly_rent !== 99999) 
+    .filter(row => +row.gross_monthly_rent > 0 && +row.gross_monthly_rent !== 9999 && +row.gross_monthly_rent !== 9998 && +row.gross_monthly_rent !== 99999) 
     .map(row => ({
       boro_name: boroughMapping[+row.borough], 
       rent_paid: +row.gross_monthly_rent  
     }));
 
-  boroughRentData = processedData.reduce((acc, row) => {
+    saveData[year]["boroughRentData"] = processedData.reduce((acc, row) => {
     if (!acc[row.boro_name]) {
       acc[row.boro_name] = [];
     }
@@ -273,7 +290,6 @@ function preprocessOccData(occData) {
     return acc;
   }, {});
 
-  console.log("Updated boroughRentData:", boroughRentData);
   return processedData;
 }
 
@@ -304,7 +320,6 @@ function createBuckets(data, step = 250) {
 
 // Update the renderDetailGraph function
 function renderDetailGraph() {
-  console.log("render graph")
   const graphContainer = d3.select("#detail-graph");
   const graphSvg = graphContainer.select("svg");
   graphSvg.selectAll("*").remove(); // Clear existing graph
@@ -333,7 +348,7 @@ function renderDetailGraph() {
   if (currentAttribute === "RENT_AMOUNT_PAID") {
     renderRentGraph(selectedBorough);
   } else if (currentAttribute === "OCC") {
-    renderOCCGraph(allUnitsData, selectedBorough);
+    renderOCCGraph(currentYear, selectedBorough);
   } else {
     graphSvg.append("text")
       .attr("x", "50%")
@@ -345,8 +360,8 @@ function renderDetailGraph() {
 
 function renderRentGraph(boroughName) {
   const rentGraphData = boroughName
-    ? boroughRentData[boroughName] || []
-    : Object.values(boroughRentData).flat();
+    ? saveData[currentYear].boroughRentData[boroughName] || []
+    : Object.values(saveData[currentYear].boroughRentData).flat();
 
   if (rentGraphData.length === 0) {
     d3.select("#detail-graph svg")
@@ -404,7 +419,6 @@ function renderRentGraph(boroughName) {
     .text(d => `Range: $${d.x0} - $${d.x1}\nCount: ${d.length}`);
 }
 
-
 function calculateOccDistribution(allUnitsData, boroughName) {
   const occCounts = {};
   allUnitsData.forEach(row => {
@@ -424,8 +438,8 @@ function calculateOccDistribution(allUnitsData, boroughName) {
   }));
 }
 
-function renderOCCGraph(allUnitsData, boroughName) {
-  const occData = calculateOccDistribution(allUnitsData, boroughName);
+function renderOCCGraph(year, boroughName) {
+  const occData = calculateOccDistribution(saveData[year].allUnitsData, boroughName);
   const graphSvg = d3.select("#detail-graph svg");
   graphSvg.selectAll("*").remove(); 
 
