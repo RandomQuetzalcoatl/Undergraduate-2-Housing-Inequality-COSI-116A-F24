@@ -41,8 +41,6 @@ let currentAttribute = "RENT_AMOUNT_PAID";
 let currentYear = ["2021"];
 let sliderYear = "2021";
 let selectedBorough = null;
-let brushSelection = null; // Stores the brush selection extent
-let selectedYears = [];    // Tracks selected years from brushing
 
 //Data Variables
 const saveData = {
@@ -176,7 +174,7 @@ function updateMapColors(attribute, mapData, geoData) {
   const colorScale = d3
     .scaleLinear()
     .domain([0, maxValue])
-    .range(["#ffcccc", "#ff0000"]); // Light red to red
+    .range(["#ffcccc", "#ff0000"]); //Light red to red
 
   document.getElementById("legend-min").textContent = "0";
   document.getElementById("legend-max").textContent = maxValue.toFixed(2);
@@ -193,7 +191,7 @@ function updateMapColors(attribute, mapData, geoData) {
     )
     .style("fill", (d) => {
       const boroName = d.properties.boro_name;
-      return data[boroName] ? colorScale(data[boroName]) : "#ccc"; // Missing data will be grey
+      return data[boroName] ? colorScale(data[boroName]) : "#ccc"; //missing data will be grey
     })
     .on("mouseover", function (event, d) {
       d3.select(this).style("fill", "orange");
@@ -209,9 +207,7 @@ function updateMapColors(attribute, mapData, geoData) {
       const boroName = d.properties.boro_name;
       const isSelected = d3.select(this).classed("selected");
 
-      // Clear all selections
       svg.selectAll(".borough").classed("selected", false);
-
       if (!isSelected) {
         d3.select(this).classed("selected", true);
         selectedBorough = boroName;
@@ -688,20 +684,22 @@ function renderTimeGraph() {
 
   graphSvg.append("g").attr("class", "brush").call(brush);
 
+  // Brush event handler
   function brushed({ selection }) {
     if (!selection) return;
-  
+
     const [x0, x1] = selection.map(x.invert);
-    selectedYears = timeData.filter((d) => d.year >= x0 && d.year <= x1).map((d) => d.year);
-  
-    // Highlight selected points
-    highlightSelectedPoints(selectedYears);
-  
-    // Update visualizations while retaining borough selection
-    loadAndUpdateMap(selectedYears);
+    const selectedYears = timeData.filter((d) => d.year >= x0 && d.year <= x1);
+    const yearsSelected = selectedYears.map((d) => d.year);
+
+    highlightSelectedPoints(yearsSelected);
+    currentYear = yearsSelected;
+    //renderScatterplot(yearsSelected);
+    loadAndUpdateMap(yearsSelected); // Optionally update map
     renderDetailGraph();
   }
 
+  // Highlight only points
   function highlightSelectedPoints(yearsSelected) {
     graphSvg
       .selectAll(".point")
@@ -843,17 +841,12 @@ function fusionDance(target, source) {
 
 function resetTimeGraphHighlight() {
   const graphSvg = d3.select("#time-chart svg");
-
-  // Reset brushing and selected years
-  brushSelection = null;
-  selectedYears = [];
-  
   graphSvg.select(".brush").call(d3.brush().move, null);
-  graphSvg.selectAll(".point").attr("fill", "#69b3a2");
-
-  // Reload the map and detail graph with the current year
+  graphSvg.selectAll(".point")
+    .attr("fill", "#69b3a2");
   loadAndUpdateMap(currentYear);
   renderDetailGraph();
+  //renderScatterplot();
 }
 // Initialize graphs
 initialize();
