@@ -699,7 +699,7 @@ function renderTimeGraph() {
   
     // Update visualizations while retaining borough selection
     loadAndUpdateMap(selectedYears);
-    renderDetailGraph(selectedBorough);
+    renderDetailGraph();
   }
 
   function highlightSelectedPoints(yearsSelected) {
