@@ -109,12 +109,12 @@
 
     <h1 class="hd1">Demo Video</h1>
     
-    <p><em>Embedded MP4 demo video using the HTML5 &lt;video&gt;
-    <video controls width="100%">
-      <source src="https://drive.google.com/file/d/11KVCvpeYaOahMDm5kmx9KprRj7lykAST/view?usp=drive_link" type="video/mp4">
-      <p>Your browser doesn't support HTML5 video. Here is
-       a <a href="https://drive.google.com/file/d/11KVCvpeYaOahMDm5kmx9KprRj7lykAST/view?usp=drive_link">link to the video</a> instead.</p>
-    </video>
+<p><em>Embedded MP4 demo video using the HTML5 &lt;video&gt; tag.</em></p>
+<video controls width="100%">
+  <source src="https://drive.google.com/uc?id=11KVCvpeYaOahMDm5kmx9KprRj7lykAST&export=download" type="video/mp4">
+  <p>Your browser doesn't support HTML5 video. 
+     Here is <a href="https://drive.google.com/file/d/11KVCvpeYaOahMDm5kmx9KprRj7lykAST/view?usp=drive_link" target="_blank">a link to the video</a> instead.</p>
+</video>
 
     <h1 class="hd1">Visualization explanation</h1>
     
@@ -128,7 +128,7 @@
     <img src="images/MainView2.PNG" alt="visualizations" style="width:100%;">
     <p>If you then click on the borough, it will gain an outline. This will also affect all other graphs, with the detail graph changing to represent data from that specific borough, and the scatterplot focusing on the dots belonging to that borough. The fourth graph reacts in a similar way to the detail graph, but we'll get to that later.</p>
     <img src="images/NewYork2.png" alt="visualizations" style="width:100%;">
-    <p>This is the variable menu, this lets you select which varaible you want your graph to be colored by. Your options are rent price, or rental vacancy rate (calculated by (vacant units available for rent) / (number of occupied units + vacant units available for rent)).</p>
+    <p>This is the variable menu. This lets you select which variable you want your graph to be colored by. Your options are rent price, or rental vacancy rate (calculated by (vacant units available for rent) / (number of occupied units + vacant units available for rent)).</p>
     <img src="images/NewYork3.png" alt="visualizations" style="width:100%;">
     <p>Selecting Rental Vacancy Rate will change our visualization.</p>
     <img src="images/MainView3.png" alt="visualizations" style="width:100%;">
@@ -173,7 +173,7 @@
 <p>For the initial process, we created 3 sketches each and finalized the following three for our interactive element:
   <img src="images/design-sketch.png" alt="Team Final 3 Sketches" style="width:100%;"> 
 </p>
-<p>For our mockup, we implemented the visualizations with dummy data with some basic interactivity and tooltips, we didn't have the line graph at this time, so some advice we got was a desire to be able to compare across year more easily rather than relying on scrolling with the slider, so later on we added the time graph. We were also discussing making the interactive scatterplot to allow brushing and linking, originally wanting to connect it to the detail graph to highlight continous demographic information like income. Ultimately, this scrapped and replaced with implementing brushing and linking via the time graph, since it was much less complicated to implement given our existing code frameworks.</p>
+<p>For our mockup, we implemented the visualizations with dummy data with some basic interactivity and tooltips, we didn't have the line graph at this time, so some advice we got was a desire to be able to compare across year more easily rather than relying on scrolling with the slider, so later on we added the time graph. We were also discussing making the interactive scatterplot to allow brushing and linking, originally wanting to connect it to the detail graph to highlight continous demographic information like income. Ultimately, this was scrapped and replaced with implementing brushing and linking via the time graph, since it was much less complicated to implement given our existing code frameworks.</p>
   <img src="images/design1.png" alt="visualizations" style="width:100%;">
   <img src="images/design2.png" alt="visualizations" style="width:100%;">
 </p>
