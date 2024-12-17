@@ -38,8 +38,11 @@ const attributeLabels = {
 
 //Global Variables
 let currentAttribute = "RENT_AMOUNT_PAID";
-let currentYear = "2021";
+let currentYear = ["2021"];
+let sliderYear = "2021";
 let selectedBorough = null;
+let brushSelection = null; // Stores the brush selection extent
+let selectedYears = [];    // Tracks selected years from brushing
 
 //Data Variables
 const saveData = {
@@ -80,8 +83,9 @@ function initialize() {
   // Gets year slider and displays year
   const yearSlider = document.getElementById("year-slider");
   const yearDisplay = document.getElementById("year-display");
-  currentYear = years[yearSlider.value].split(" ")[0]; // Updates global variable for year
-  yearDisplay.textContent = currentYear;
+  currentYear = [years[yearSlider.value].split(" ")[0]]; // Updates global variable for year
+  sliderYear = years[yearSlider.value].split(" ")[0];
+  yearDisplay.textContent = currentYear[0];
 
   Promise.all(
     years.map((yearEntry) => {
@@ -131,10 +135,12 @@ function initialize() {
       // Add event listener to the year slider
       yearSlider.addEventListener("input", function () {
         const yearIndex = +yearSlider.value;
-        currentYear = years[yearIndex].split(" ")[0];
-        yearDisplay.textContent = currentYear;
+        currentYear = [years[yearIndex].split(" ")[0]];
+        sliderYear = years[yearIndex].split(" ")[0];
+        yearDisplay.textContent = currentYear[0];
         loadAndUpdateMap(currentYear);
         renderDetailGraph();
+        resetTimeGraphHighlight();
       });
 
       // Add event listener for attribute changes
@@ -155,8 +161,8 @@ function loadAndUpdateMap(selectedYear) {
   d3.json("data/Borough Boundaries.geojson")
     .then((geoData) => {
       const mapData = {
-        RENT_AMOUNT_PAID: averageRentData(saveData[selectedYear].rentData),
-        OCC: saveData[selectedYear].vacancyRateData,
+        RENT_AMOUNT_PAID: averageRentData(selectedYearsData(selectedYear).rentData),
+        OCC: selectedYearsData(selectedYear).vacancyRateData,
       };
 
       updateMapColors(currentAttribute, mapData, geoData);
@@ -170,7 +176,7 @@ function updateMapColors(attribute, mapData, geoData) {
   const colorScale = d3
     .scaleLinear()
     .domain([0, maxValue])
-    .range(["#ffcccc", "#ff0000"]); //Light red to red
+    .range(["#ffcccc", "#ff0000"]); // Light red to red
 
   document.getElementById("legend-min").textContent = "0";
   document.getElementById("legend-max").textContent = maxValue.toFixed(2);
@@ -180,10 +186,14 @@ function updateMapColors(attribute, mapData, geoData) {
     .data(geoData.features)
     .join("path")
     .attr("d", path)
-    .attr("class", "borough")
+    .attr("class", (d) =>
+      d.properties.boro_name === selectedBorough
+        ? "borough selected"
+        : "borough"
+    )
     .style("fill", (d) => {
       const boroName = d.properties.boro_name;
-      return data[boroName] ? colorScale(data[boroName]) : "#ccc"; //missing data will be grey
+      return data[boroName] ? colorScale(data[boroName]) : "#ccc"; // Missing data will be grey
     })
     .on("mouseover", function (event, d) {
       d3.select(this).style("fill", "orange");
@@ -199,7 +209,9 @@ function updateMapColors(attribute, mapData, geoData) {
       const boroName = d.properties.boro_name;
       const isSelected = d3.select(this).classed("selected");
 
+      // Clear all selections
       svg.selectAll(".borough").classed("selected", false);
+
       if (!isSelected) {
         d3.select(this).classed("selected", true);
         selectedBorough = boroName;
@@ -211,7 +223,6 @@ function updateMapColors(attribute, mapData, geoData) {
       renderTimeGraph();
     })
     .each(function (d) {
-      //ensures tooltip is updated
       const boroName = d.properties.boro_name;
       const value = data[boroName] ? data[boroName].toFixed(2) : "N/A";
       const label = attributeLabels[attribute] || "Unknown Attribute";
@@ -223,6 +234,7 @@ function updateMapColors(attribute, mapData, geoData) {
       title.text(`${boroName}\n${label}: ${value}`);
     });
 }
+
 
 //View functions
 
@@ -393,8 +405,8 @@ function renderDetailGraph() {
 
 function renderRentGraph(boroughName) {
   const rentGraphData = boroughName
-    ? saveData[currentYear].boroughRentData[boroughName] || []
-    : Object.values(saveData[currentYear].boroughRentData).flat();
+    ? selectedYearsData(currentYear).boroughRentData[boroughName] || []
+    : Object.values(selectedYearsData(currentYear).boroughRentData).flat();
 
   if (rentGraphData.length === 0) {
     d3.select("#detail-graph svg")
@@ -478,7 +490,7 @@ function calculateOccDistribution(allUnitsData, boroughName) {
 
 function renderOCCGraph(year, boroughName) {
   const occData = calculateOccDistribution(
-    saveData[year].allUnitsData,
+   selectedYearsData(year).allUnitsData,
     boroughName
   );
   const graphSvg = d3.select("#detail-graph svg");
@@ -664,11 +676,44 @@ function renderTimeGraph() {
     .attr("fill", "#69b3a2")
     .append("title")
     .text((d) => `Year: ${d.year}\nValue: ${d.value.toFixed(2)}`);
+
+ 
+  const brush = d3
+    .brushX()
+    .extent([
+      [50, 50],
+      [graphWidth - 50, graphHeight - 50],
+    ])
+    .on("end", brushed);
+
+  graphSvg.append("g").attr("class", "brush").call(brush);
+
+  function brushed({ selection }) {
+    if (!selection) return;
+  
+    const [x0, x1] = selection.map(x.invert);
+    selectedYears = timeData.filter((d) => d.year >= x0 && d.year <= x1).map((d) => d.year);
+  
+    // Highlight selected points
+    highlightSelectedPoints(selectedYears);
+  
+    // Update visualizations while retaining borough selection
+    loadAndUpdateMap(selectedYears);
+    renderDetailGraph(selectedBorough);
+  }
+
+  function highlightSelectedPoints(yearsSelected) {
+    graphSvg
+      .selectAll(".point")
+      .attr("fill", (d) =>
+        yearsSelected.includes(d.year) ? "orange" : "#69b3a2"
+      );
+  }
 }
 
 // ------------------------ Implementation of Scatterplot------------------------
 // ------I am using https://d3-graph-gallery.com/graph/scatter_tooltip.html as a reference for the scatterplot implementation
-function scatterplot() {
+function renderScatterplot() {
   const scatterplotContainer = d3
     .select("#scatterplot")
     .append("svg")
@@ -742,5 +787,73 @@ function scatterplot() {
   });
 }
 
+function selectedYearsData(selectedYears) {
+  console.log("Selected Years:", selectedYears);
+
+  // If only one year is selected, return its data directly
+  if (selectedYears.length === 1) {
+    const year = selectedYears[0];
+    return saveData[year] || {};
+  }
+  //if nothing is selected, default to slider
+  if(selectedYears.length === 0) {
+    return saveData[sliderYear];
+  }
+
+  // Initialize combined data structure
+  const combinedData = {
+    rentData: [],
+    allUnitsData: [],
+    vacancyRateData: {},
+    boroughRentData: {},
+  };
+
+  selectedYears.forEach((year) => {
+    const yearData = saveData[year];
+    if (!yearData) return;
+
+    combinedData.rentData = fusionDance(combinedData.rentData, yearData.rentData);
+    combinedData.allUnitsData = fusionDance(combinedData.allUnitsData, yearData.allUnitsData);
+    combinedData.boroughRentData = fusionDance(combinedData.boroughRentData, yearData.boroughRentData);
+  });
+
+
+  combinedData.vacancyRateData = calculateVacancyRate(combinedData.allUnitsData);
+
+  console.log("Combined Data:", combinedData);
+  return combinedData;
+}
+
+
+function fusionDance(target, source) {
+  if (Array.isArray(source)) {
+    return target.concat(source);
+  } else if (typeof source === "object" && source !== null) {
+
+    Object.entries(source).forEach(([key, value]) => {
+      if (!target[key]) {
+        target[key] = Array.isArray(value) ? [] : {}; 
+      }
+      target[key] = fusionDance(target[key], value);
+    });
+    return target;
+  }
+  return target;
+}
+
+function resetTimeGraphHighlight() {
+  const graphSvg = d3.select("#time-chart svg");
+
+  // Reset brushing and selected years
+  brushSelection = null;
+  selectedYears = [];
+  
+  graphSvg.select(".brush").call(d3.brush().move, null);
+  graphSvg.selectAll(".point").attr("fill", "#69b3a2");
+
+  // Reload the map and detail graph with the current year
+  loadAndUpdateMap(currentYear);
+  renderDetailGraph();
+}
 // Initialize graphs
 initialize();
