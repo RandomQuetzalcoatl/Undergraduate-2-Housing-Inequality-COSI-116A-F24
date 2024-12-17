@@ -720,9 +720,9 @@ function renderTimeGraph() {
 
     highlightSelectedPoints(yearsSelected);
     currentYear = yearsSelected;
-    //renderScatterplot(yearsSelected);
     loadAndUpdateMap(yearsSelected); // Optionally update map
     renderDetailGraph();
+    renderScatterplot();
   }
 
   // Highlight only points
