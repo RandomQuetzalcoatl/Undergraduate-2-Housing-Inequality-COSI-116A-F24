@@ -760,7 +760,10 @@ function renderScatterplot() {
     .range(d3.schemeCategory10);
 
   if (currentAttribute === "RENT_AMOUNT_PAID") {
-    const scatterData = rentData.filter((d) => d.income > 0 && d.rent_paid > 0);
+    //9999999 and 999999 represents no income 999998 is not reported
+    const scatterData = rentData.filter(
+      (d) => d.income > 0 && d.income !== 9999999 && d.income !== 999998 && d.income !== 999999 && d.rent_paid > 0
+    );
 
     const x =
       scaleType === "logarithmic"
@@ -811,7 +814,7 @@ function renderScatterplot() {
       .attr("r", 4)
       .attr("fill", (d) => colorScale(d.boro_name))
       .attr("opacity", (d) =>
-        !selectedBorough || d.boro_name === selectedBorough ? 0.7 : 0.1
+        !selectedBorough || d.boro_name === selectedBorough ? 0.6 : 0.1
       )
       .append("title")
       .text(
@@ -921,7 +924,7 @@ function resetTimeGraphHighlight() {
   graphSvg.selectAll(".point").attr("fill", "#69b3a2");
   loadAndUpdateMap(currentYear);
   renderDetailGraph();
-  //renderScatterplot();
+  renderScatterplot();
 }
 // Initialize graphs
 initialize();
