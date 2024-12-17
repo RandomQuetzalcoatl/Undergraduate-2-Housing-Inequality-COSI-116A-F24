@@ -119,7 +119,32 @@
     <h1 class="hd1">Visualization explanation</h1>
     
     <p><em>Final visualization screenshots (PNG images), design justifications, UI walk-through, and linked presentation slides.</em></p>
-
+    <img src="images/MainView1.PNG" alt="visualizations" style="width:100%;">
+    <p>Firstly, we have our main dashboard, this has three graphs we will focus on first. Our main graph of New York City, and two graphs with further info.</p>
+    <img src="images/NewYork1.PNG" alt="visualizations" style="width:100%;">
+    <p>This is our graph of the New York Boroughs.</p>
+    <img src="images/NewYork1-2.PNG" alt="visualizations" style="width:100%;">
+    <p>By hovering over a borough, it highlights and provides you a tooltip with the exact numbers the shade of color represents. You can get similar tooltips hovering over the scatterplot or the detail graph.</p>
+    <img src="images/MainView2.PNG" alt="visualizations" style="width:100%;">
+    <p>If you then click on the borough, it will gain an outline. This will also affect all other graphs, with the detail graph changing to represent data from that specific borough, and the scatterplot focusing on the dots belonging to that borough. The fourth graph reacts in a similar way to the detail graph, but we'll get to that later.</p>
+    <img src="images/NewYork2.png" alt="visualizations" style="width:100%;">
+    <p>This is the variable menu, this lets you select which varaible you want your graph to be colored by. Your options are rent price, or rental vacancy rate (calculated by (vacant units available for rent) / (number of occupied units + vacant units available for rent)).</p>
+    <img src="images/NewYork3.png" alt="visualizations" style="width:100%;">
+    <p>Selecting Rental Vacancy Rate will change our visualization.</p>
+    <img src="images/MainView3.png" alt="visualizations" style="width:100%;">
+    <p>It will also change our detail graphs on the side, and since Rental Vacancy Rate is a summary statistic only, we didn't include a scatterplot for it.</p>
+    <img src="images/NewYork4.PNG" alt="visualizations" style="width:100%;">
+    <p>Finally, we can use the year slider to scroll through time, there are 11 different years available.</p>
+    <img src="images/TimeGraph.PNG" alt="visualizations" style="width:100%;">
+    <p>We can see the trend of these years below our main visualization with the time graph, this shows the values for the current variable across each year. As mentioned earlier, it can also be narrowed by selecting a borough.</p>
+    <img src="images/TimeGraph2.PNG" alt="visualizations" style="width:100%;">
+    <p>We can use brushing and linking on the time graph to select multiple years for our graphs to display. For example, this selection provides graphs for the combined 2000 and 2002 data.</p>
+    <div class="bench">
+    <img src="images/Scatterplot1.PNG" alt="visualizations" style="width:45%;">
+    <p>As an additional note, you can also change the axis of the scatterplot from linear to logarithmic via the drop down menu below it.</p>
+    <img src="images/Scatterplot2.PNG" alt="visualizations" style="width:45%;">
+    <img src="images/Scatterplot3.PNG" alt="visualizations" style="width:45%;">
+  </div>
     <h1 class="hd1">Data Analysis</h1>
     <p><em>Summary of data, data types, and data preprocessing.</em></p>
     <p>The dataset we are using explores housing inequality across New York City boroughs by examining key variables such as vacancy rates, elevator availability, income levels, building characteristics, etc. We are looking from the year 1991–2021, and our data is from New York City Housing and Vacancy Surveys. Data preprocessing involved mapping numerical values (e.g., BORO = 1 to Manhattan) to meaningful labels, deriving metrics like average vacancy rates and income by borough, and cleaning invalid or missing data. Additional variables such as population density, rent prices, unemployment rates, and proximity to public transportation could enhance the analysis by providing deeper context. For example, comparing vacancy rates with income and poverty levels highlights economic disparities, while incorporating walkability scores or crime rates can reveal factors affecting housing demand. This dataset also allows us to explore shifts in housing trends over time, such as the impact of gentrification on vacancy rates and affordability in historically low-income neighborhoods. By analyzing patterns of resource allocation, such as access to amenities and public services, we aim to uncover how structural inequality has shaped the housing landscape. Visualizations like heat maps, correlation matrices, and time-series graphs were used to identify clusters of inequality and demonstrate evolving disparities across boroughs. Various visualizations, including scatter plots, bar graphs, and line charts, were used to illustrate trends and correlations, such as higher vacancy rates in lower-income boroughs like the Bronx. 
@@ -143,12 +168,12 @@
     <p><em>Expectation: Evidence of iterative improvement.
     Logical discussion of design choices grounded in theory from course.
     Discusses feedback from usability testing.</em></p>
-    <p>During our visualization sketches we decided over a variety of sketches we made that we’d represent housing inequality through scatterplots, A detailed map of New York, and line graphs for data over time. These visualizations aim to address our project’s key questions like understanding housing cost disparities or analyzing demographic factors. We also created a scatter plot to address alternate perspectives of housing inequality beyond our main task questions. 
+    <p>To start off, we immediately wanted to do a map, given that we are dealing with data representing a physical space, using our position and shape to relay borough information, and color to encode the variables was an easy choice. We eventually decided over a variety of sketches we made that we’d represent housing inequality through bar graphs, A detailed map of New York, and line graphs for data over time. These visualizations aim to address our project’s key questions like understanding housing cost disparities or analyzing demographic factors. We also created a scatter plot to address alternate perspectives of housing inequality beyond our main task questions. 
 </p>
 <p>For the initial process, we created 3 sketches each and finalized the following three for our interactive element:
   <img src="images/design-sketch.png" alt="Team Final 3 Sketches" style="width:100%;"> 
 </p>
-<p>We then implemented the visualizations and incorporated interactivity like brushing, linking, and tooltips in our plots and graphs for enhanced user engagement:
+<p>For our mockup, we implemented the visualizations with dummy data with some basic interactivity and tooltips, we didn't have the line graph at this time, so some advice we got was a desire to be able to compare across year more easily rather than relying on scrolling with the slider, so later on we added the time graph. We were also discussing making the interactive scatterplot to allow brushing and linking, originally wanting to connect it to the detail graph to highlight continous demographic information like income. Ultimately, this scrapped and replaced with implementing brushing and linking via the time graph, since it was much less complicated to implement given our existing code frameworks.</p>
   <img src="images/design1.png" alt="visualizations" style="width:100%;">
   <img src="images/design2.png" alt="visualizations" style="width:100%;">
 </p>

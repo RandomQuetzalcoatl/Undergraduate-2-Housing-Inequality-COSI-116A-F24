@@ -39,6 +39,12 @@
   gap: 10px;
 }
 
+#bench {
+  max-width: 100%; 
+  height: auto; 
+  object-fit: contain;
+}
+
 #map-container {
   position: relative;
   width: 100%;
