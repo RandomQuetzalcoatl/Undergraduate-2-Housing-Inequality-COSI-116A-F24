@@ -94,6 +94,16 @@ function initialize() {
 
         return Promise.all([d3.csv(allUnitsPath), d3.csv(occupiedPath)]).then(
           ([allUnits, occupied]) => {
+            allUnits = allUnits.map((d) => ({
+              ...d,
+              income: +d.HHINC_REC1 || 0, // Map HHINC_REC1 to income
+            }));
+
+            occupied = occupied.map((d) => ({
+              ...d,
+              income: +d.HHINC_REC1 || 0, // Map HHINC_REC1 to income
+            }));
+
             const mergedRent = mergeRentData(allUnits, occupied, year);
             const vacancyRate = calculateVacancyRate(allUnits);
             saveData[year] = {
@@ -129,6 +139,7 @@ function initialize() {
       loadAndUpdateMap(currentYear);
       renderDetailGraph();
       renderTimeGraph();
+      renderScatterplot();
 
       // Add event listener to the year slider
       yearSlider.addEventListener("input", function () {
@@ -139,6 +150,7 @@ function initialize() {
         loadAndUpdateMap(currentYear);
         renderDetailGraph();
         resetTimeGraphHighlight();
+        renderScatterplot();
       });
 
       // Add event listener for attribute changes
@@ -147,6 +159,12 @@ function initialize() {
         loadAndUpdateMap(currentYear); // Reload map with the current year
         renderDetailGraph();
         renderTimeGraph();
+        renderScatterplot();
+      });
+
+      // Event listener for scale selection
+      d3.select("#scale-select").on("change", () => {
+        renderScatterplot(); // Re-render the scatterplot with the new scale
       });
     })
     .catch((error) => {
@@ -159,7 +177,9 @@ function loadAndUpdateMap(selectedYear) {
   d3.json("data/Borough Boundaries.geojson")
     .then((geoData) => {
       const mapData = {
-        RENT_AMOUNT_PAID: averageRentData(selectedYearsData(selectedYear).rentData),
+        RENT_AMOUNT_PAID: averageRentData(
+          selectedYearsData(selectedYear).rentData
+        ),
         OCC: selectedYearsData(selectedYear).vacancyRateData,
       };
 
@@ -214,9 +234,9 @@ function updateMapColors(attribute, mapData, geoData) {
       } else {
         selectedBorough = null;
       }
-
       renderDetailGraph();
       renderTimeGraph();
+      renderScatterplot();
     })
     .each(function (d) {
       const boroName = d.properties.boro_name;
@@ -231,7 +251,6 @@ function updateMapColors(attribute, mapData, geoData) {
     });
 }
 
-
 //View functions
 
 //Rent Amount
@@ -239,16 +258,23 @@ function mergeRentData(allUnitsData, occupiedData, year) {
   const rentMap = new Map();
   occupiedData.forEach((row) => {
     if (row.RENTPAID_AMOUNT > 0) {
-      rentMap.set(row.CONTROL, +row.RENTPAID_AMOUNT);
+      rentMap.set(row.CONTROL, {
+        rent_paid: +row.RENTPAID_AMOUNT,
+        income: +row.HHINC_REC1 || 0,
+      });
     }
   });
 
   const mergedData = allUnitsData
     .filter((row) => rentMap.has(row.CONTROL))
-    .map((row) => ({
-      boro_name: boroughMapping[row.BORO],
-      rent_paid: rentMap.get(row.CONTROL),
-    }));
+    .map((row) => {
+      const { rent_paid, income } = rentMap.get(row.CONTROL);
+      return {
+        boro_name: boroughMapping[row.BORO],
+        rent_paid,
+        income,
+      };
+    });
 
   saveData[year]["boroughRentData"] = mergedData.reduce((acc, row) => {
     if (!acc[row.boro_name]) acc[row.boro_name] = [];
@@ -316,6 +342,7 @@ function preprocessOccData(occData, year) {
     .map((row) => ({
       boro_name: boroughMapping[+row.borough],
       rent_paid: +row.gross_monthly_rent,
+      income: +row.income,
     }));
 
   saveData[year]["boroughRentData"] = processedData.reduce((acc, row) => {
@@ -486,7 +513,7 @@ function calculateOccDistribution(allUnitsData, boroughName) {
 
 function renderOCCGraph(year, boroughName) {
   const occData = calculateOccDistribution(
-   selectedYearsData(year).allUnitsData,
+    selectedYearsData(year).allUnitsData,
     boroughName
   );
   const graphSvg = d3.select("#detail-graph svg");
@@ -673,7 +700,6 @@ function renderTimeGraph() {
     .append("title")
     .text((d) => `Year: ${d.year}\nValue: ${d.value.toFixed(2)}`);
 
- 
   const brush = d3
     .brushX()
     .extent([
@@ -712,89 +738,133 @@ function renderTimeGraph() {
 // ------------------------ Implementation of Scatterplot------------------------
 // ------I am using https://d3-graph-gallery.com/graph/scatter_tooltip.html as a reference for the scatterplot implementation
 function renderScatterplot() {
-  const scatterplotContainer = d3
-    .select("#scatterplot")
-    .append("svg")
-    .attr("width", "100%")
-    .attr("height", "100%")
-    .attr("viewBox", "0 0 800 600")
-    .attr("preserveAspectRatio", "xMidYMid meet");
-  d3.csv("data/1991/occ_data_1991.csv").then((data) => {
-    const x = d3.scaleLinear().domain([0, 10000]).range([0, 800]);
-    scatterplotContainer
+  const graphContainer = d3.select("#scatterplot");
+  const graphSvg = graphContainer.select("svg");
+  graphSvg.selectAll("*").remove();
+
+  const graphWidth = parseInt(graphContainer.style("width"));
+  const graphHeight = parseInt(graphContainer.style("height")) * 0.8;
+  const margin = { top: 20, right: 20, bottom: 60, left: 60 };
+
+  graphSvg.attr("width", graphWidth).attr("height", graphHeight);
+
+  const combinedData = selectedYearsData(currentYear);
+  const rentData = combinedData.rentData;
+
+  const scaleType = d3.select("#scale-select").property("value");
+
+  //Color boroughs differently
+  const colorScale = d3
+    .scaleOrdinal()
+    .domain(Object.values(boroughMapping))
+    .range(d3.schemeCategory10);
+
+  if (currentAttribute === "RENT_AMOUNT_PAID") {
+    const scatterData = rentData.filter((d) => d.income > 0 && d.rent_paid > 0);
+
+    const x =
+      scaleType === "logarithmic"
+        ? d3
+            .scaleLog()
+            .base(10)
+            .domain([
+              Math.max(
+                1,
+                d3.min(scatterData, (d) => +d.income)
+              ),
+              d3.max(scatterData, (d) => +d.income),
+            ])
+            .range([margin.left, graphWidth - margin.right])
+        : d3
+            .scaleLinear()
+            .domain([0, d3.max(scatterData, (d) => +d.income)])
+            .nice()
+            .range([margin.left, graphWidth - margin.right]);
+
+    const y = d3
+      .scaleLinear()
+      .domain([0, d3.max(scatterData, (d) => +d.rent_paid)])
+      .nice()
+      .range([graphHeight - margin.bottom, margin.top]);
+
+    graphSvg
       .append("g")
-      .attr("transform", "translate(0, 600)")
-      .call(d3.axisBottom(x));
-    const y = d3.scaleLinear().domain([0, 10000]).range([600, 0]);
-    scatterplotContainer.append("g").call(d3.axisLeft(y));
-    scatterplotContainer
-      .selectAll("dot")
-      .data(data)
+      .attr("transform", `translate(0,${graphHeight - margin.bottom})`)
+      .call(
+        d3.axisBottom(x).ticks(10, scaleType === "logarithmic" ? ".0s" : "s")
+      );
+
+    graphSvg
+      .append("g")
+      .attr("transform", `translate(${margin.left},0)`)
+      .call(d3.axisLeft(y).ticks(10));
+
+    // Scatterplot points
+    const dots = graphSvg
+      .selectAll(".dot")
+      .data(scatterData)
       .enter()
       .append("circle")
-      .attr("cx", (d) => x(d.income))
-      .attr("cy", (d) => y(d.borough))
-      .attr("r", 5)
-      .style("fill", "#69b3a2");
+      .attr("class", "dot")
+      .attr("cx", (d) => x(+d.income))
+      .attr("cy", (d) => y(+d.rent_paid))
+      .attr("r", 4)
+      .attr("fill", (d) => colorScale(d.boro_name))
+      .attr("opacity", (d) =>
+        !selectedBorough || d.boro_name === selectedBorough ? 0.7 : 0.1
+      )
+      .append("title")
+      .text(
+        (d) =>
+          `Borough: ${d.boro_name}\nIncome: $${d.income}\nRent Paid: $${d.rent_paid}`
+      );
 
-    const tooltip = d3
-      .select("#scatterplot")
-      .append("div")
-      .style("opacity", 0)
-      .attr("class", "tooltip")
-      .style("background-color", "white")
-      .style("border", "solid")
-      .style("border-width", "1px")
-      .style("border-radius", "5px")
-      .style("padding", "10px");
+    // Raise dots from selected borough
+    if (selectedBorough) {
+      graphSvg
+        .selectAll(".dot")
+        .filter((d) => d.boro_name === selectedBorough)
+        .each(function () {
+          d3.select(this).raise();
+        });
+    }
 
-    const mouseover = function (d) {
-      tooltip.style("opacity", 1);
-    };
+    // Add labels
+    graphSvg
+      .append("text")
+      .attr("x", graphWidth / 2)
+      .attr("y", graphHeight - 10)
+      .attr("text-anchor", "middle")
+      .text("Income");
 
-    const mousemove = function (d) {
-      tooltip
-        .html("The exact income of<br>this borough is: " + d.income) // considering we only compare income with borough in 1991, otherwise edit accordingly
-        .style("left", d3.mouse(this)[0] + 90 + "px")
-        .style("top", d3.mouse(this)[1] + "px");
-    };
-
-    const mouseleave = function (d) {
-      tooltip.transition().duration(200).style("opacity", 0);
-    };
-
-    scatterplot
-      .append("g")
-      .selectAll("dot")
-      .data()
-      .enter()
-      .append("circle")
-      .attr("cx", function (d) {
-        return x(d.income);
-      })
-      .attr("cy", function (d) {
-        return y(d.borough);
-      })
-      .attr("r", 7)
-      .style("fill", "#69b3a2")
-      .style("opacity", 0.3)
-      .style("stroke", "white")
-      .on("mouseover", mouseover)
-      .on("mousemove", mousemove)
-      .on("mouseleave", mouseleave);
-  });
+    graphSvg
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -graphHeight / 2)
+      .attr("y", margin.left / 3)
+      .attr("text-anchor", "middle")
+      .text("Rent Paid");
+  } else {
+    graphSvg
+      .append("text")
+      .attr("x", graphWidth / 2)
+      .attr("y", graphHeight / 2)
+      .attr("text-anchor", "middle")
+      .attr("fill", "#666")
+      .style("font-size", "16px")
+      .text("No plot available for this attribute");
+    return;
+  }
 }
 
 function selectedYearsData(selectedYears) {
-  console.log("Selected Years:", selectedYears);
-
   // If only one year is selected, return its data directly
   if (selectedYears.length === 1) {
     const year = selectedYears[0];
     return saveData[year] || {};
   }
   //if nothing is selected, default to slider
-  if(selectedYears.length === 0) {
+  if (selectedYears.length === 0) {
     return saveData[sliderYear];
   }
 
@@ -810,27 +880,33 @@ function selectedYearsData(selectedYears) {
     const yearData = saveData[year];
     if (!yearData) return;
 
-    combinedData.rentData = fusionDance(combinedData.rentData, yearData.rentData);
-    combinedData.allUnitsData = fusionDance(combinedData.allUnitsData, yearData.allUnitsData);
-    combinedData.boroughRentData = fusionDance(combinedData.boroughRentData, yearData.boroughRentData);
+    combinedData.rentData = fusionDance(
+      combinedData.rentData,
+      yearData.rentData
+    );
+    combinedData.allUnitsData = fusionDance(
+      combinedData.allUnitsData,
+      yearData.allUnitsData
+    );
+    combinedData.boroughRentData = fusionDance(
+      combinedData.boroughRentData,
+      yearData.boroughRentData
+    );
   });
 
-
-  combinedData.vacancyRateData = calculateVacancyRate(combinedData.allUnitsData);
-
-  console.log("Combined Data:", combinedData);
+  combinedData.vacancyRateData = calculateVacancyRate(
+    combinedData.allUnitsData
+  );
   return combinedData;
 }
-
 
 function fusionDance(target, source) {
   if (Array.isArray(source)) {
     return target.concat(source);
   } else if (typeof source === "object" && source !== null) {
-
     Object.entries(source).forEach(([key, value]) => {
       if (!target[key]) {
-        target[key] = Array.isArray(value) ? [] : {}; 
+        target[key] = Array.isArray(value) ? [] : {};
       }
       target[key] = fusionDance(target[key], value);
     });
@@ -842,8 +918,7 @@ function fusionDance(target, source) {
 function resetTimeGraphHighlight() {
   const graphSvg = d3.select("#time-chart svg");
   graphSvg.select(".brush").call(d3.brush().move, null);
-  graphSvg.selectAll(".point")
-    .attr("fill", "#69b3a2");
+  graphSvg.selectAll(".point").attr("fill", "#69b3a2");
   loadAndUpdateMap(currentYear);
   renderDetailGraph();
   //renderScatterplot();
